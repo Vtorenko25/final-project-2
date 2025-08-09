@@ -1,0 +1,1 @@
+export const base: string = 'http://localhost:3001';
