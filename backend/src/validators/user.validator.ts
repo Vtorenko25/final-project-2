@@ -30,19 +30,6 @@ export class UserValidator {
     password: this.password.required(),
   });
 
-  // public static getListQuery = joi.object({
-  //   limit: joi.number().min(1).max(25).default(25),
-  //   page: joi.number().min(1).default(1),
-  //   search: joi.string().trim(),
-  //   order: joi
-  //     .string()
-  //     .valid(...Object.values(OrderEnum))
-  //     .default(OrderEnum.DESC),
-  //   orderBy: joi
-  //     .string()
-  //     .valid(...Object.values(UserListOrderEnum))
-  //     .default(UserListOrderEnum.CREATED_AT),
-  // });
   public static listQuery = joi.object({
     page: joi.number().min(1).default(1),
     limit: joi.number().min(1).max(25).default(25),

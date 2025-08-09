@@ -22,11 +22,11 @@ export interface IUser {
 }
 
 export interface IUserListQuery {
-  limit: number;
-  page: number;
-  search: string;
-  order: OrderEnum;
-  orderBy: UserListOrderEnum;
+  limit?: number;
+  page?: number;
+  search?: string;
+  order?: OrderEnum;
+  orderBy?: UserListOrderEnum;
 }
 
 export type IUserResponse = Pick<

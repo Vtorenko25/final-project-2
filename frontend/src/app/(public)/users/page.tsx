@@ -1,10 +1,12 @@
 import React from 'react';
-import UsersComponent from "@/app/components/users/UsersComponent";
+import PaginationComponent from "@/components/pagination/PaginationComponent";
+import UsersComponent from "@/components/users/UsersComponent";
 
 const UsersPage = () => {
     return (
         <div>
             <UsersComponent/>
+            <PaginationComponent/>
         </div>
     );
 };
