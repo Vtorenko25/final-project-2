@@ -14,7 +14,7 @@ export default function LoginComponent() {
         try {
             const tokens = await authService.signIn(email, password);
             localStorage.setItem('tokens', JSON.stringify(tokens));
-            router.push('/users');
+            router.push('/orders');
         } catch (error: any) {
             alert(error.message || 'Помилка авторизації');
         }
