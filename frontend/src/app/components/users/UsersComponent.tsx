@@ -36,13 +36,21 @@ export default function UsersComponent() {
     };
 
     useEffect(() => {
-        userService.getAllUsers(page)
+        // спочатку отримуємо загальну кількість користувачів, щоб порахувати totalPages
+        userService.getAllUsers(1)
             .then((data) => {
-                const fetchedUsers = Array.isArray(data.data) ? data.data : data;
-                const total = data.total || fetchedUsers.length;
-                const sorted = sortData(fetchedUsers, sortColumn, sortOrder);
-                setUsers(sorted);
+                const total = data.total || data.data?.length || 0;
                 setTotalUsers(total);
+
+                const totalPages = Math.ceil(total / usersPerPage);
+                const serverPage = totalPages - page + 1; // "реверс" сторінок
+
+                userService.getAllUsers(serverPage)
+                    .then((data) => {
+                        const fetchedUsers = Array.isArray(data.data) ? data.data : data;
+                        const sorted = sortData(fetchedUsers, sortColumn, sortOrder);
+                        setUsers(sorted);
+                    });
             })
             .catch(err => {
                 console.error('Помилка завантаження:', err);
@@ -53,7 +61,6 @@ export default function UsersComponent() {
 
     return (
         <div className="users-container">
-            {/* передаємо callback для зміни сортування */}
             <HeaderComponent
                 sortColumn={sortColumn}
                 sortOrder={sortOrder}
@@ -64,9 +71,9 @@ export default function UsersComponent() {
             />
 
             {users.length > 0 ? (
-                users.map((user, index) => (
+                users.map((user) => (
                     <ul key={user._id}>
-                        <li>{totalUsers - ((page - 1) * usersPerPage + index)}</li>
+                        <li>{user.id || "null"}</li>
                         <li>{user.name || "null"}</li>
                         <li>{user.surname || "null"}</li>
                         <li>{user.email || "null"}</li>
@@ -97,3 +104,4 @@ export default function UsersComponent() {
         </div>
     );
 }
+//

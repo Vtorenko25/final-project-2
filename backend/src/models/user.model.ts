@@ -4,6 +4,7 @@ import { RoleEnum } from "../enums/role.enum";
 import { IUser } from "../interfaces/user.interface";
 
 const userSchema = new Schema({
+  id: { type: Number, unique: true, index: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
   email: { type: String, required: true, unique: true },

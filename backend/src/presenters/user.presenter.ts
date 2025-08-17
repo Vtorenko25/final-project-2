@@ -8,6 +8,7 @@ import {
 class UserPresenter {
   public toPublicResDto(entity: IUser): IUserResponse {
     return {
+      id: entity.id,
       _id: entity._id,
       name: entity.name,
       surname: entity.surname,

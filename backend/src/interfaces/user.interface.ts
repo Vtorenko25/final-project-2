@@ -4,6 +4,7 @@ import { UserListOrderEnum } from "../enums/user-list-order.enum";
 
 export interface IUser {
   _id: string;
+  id: number;
   name: string;
   surname: string;
   email: string;
@@ -33,6 +34,7 @@ export interface IUserListQuery {
 
 export type IUserResponse = Pick<
   IUser,
+  | "id"
   | "_id"
   | "name"
   | "surname"
