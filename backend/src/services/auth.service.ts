@@ -1,37 +1,35 @@
-import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../constants/constants";
+import { RoleEnum } from "../enums/role.enum";
 import { ApiError } from "../errors/api.error";
 import { ILogin } from "../interfaces/login.interface";
 import { ITokenPair } from "../interfaces/token.interface";
 import { tokenRepository } from "../repositories/token.repository";
+import { adminService } from "./admin.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
   public async signIn(dto: ILogin): Promise<ITokenPair> {
-    const user = await dto;
+    const { email, password } = dto;
 
-    // if (email !== config.adminEmail) {
-    //   console.log("DTO email:", email);
-    //   console.log("ENV email:", config.adminEmail);
-    //   throw new ApiError("Невірний email або пароль", 401);
-    // }
-    // if (password !== ADMIN_PASSWORD) {
-    //   console.log("DTO password:", password);
-    //   console.log("ENV password:", config.adminPassword);
-    //   throw new ApiError("Невірний email або пароль", 401);
-    // }
-    if (user.email !== ADMIN_EMAIL) {
+    const adminDoc = await adminService.getAdminByEmail(email);
+    if (!adminDoc) {
       throw new ApiError("Невірний email або пароль", 401);
     }
-    if (user.password !== ADMIN_PASSWORD) {
+
+    const admin = adminDoc.admin;
+
+    if (admin.password !== password) {
       throw new ApiError("Невірний email або пароль", 401);
     }
+
     const tokenPayload = {
-      email: user.email,
-      role: user.role,
-      userId: user.userId,
+      email: admin.email,
+      role: admin.role as RoleEnum,
+      userId: adminDoc._id.toString(),
     };
+
     const tokens = await tokenService.genereteTokens(tokenPayload);
-    await tokenRepository.create({ ...tokens, email: user.email });
+    await tokenRepository.create({ ...tokens, email: admin.email });
+
     return tokens;
   }
 }

@@ -8,6 +8,8 @@ export const config = {
   // mongoUrl: process.env.MONGODB_URI || "mongodb://localhost:27017/yourdb",
   mongoUrl:
     "mongodb+srv://olegvtorenko:uLQv5KYVoWHCfwSM@cluster0.ws6iz.mongodb.net/users",
+  passwordUrl:
+    "mongodb+srv://olegvtorenko:uLQv5KYVoWHCfwSM@cluster0.ws6iz.mongodb.net/password",
   adminEmail: process.env.ADMIN_EMAIL,
   adminPassword: process.env.ADMIN_PASSWORD,
 
