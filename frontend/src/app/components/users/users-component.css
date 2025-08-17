@@ -7,7 +7,7 @@
 }
 .users-container ul {
     display: grid;
-    grid-template-columns: 50px 200px 100px 100px 100px 50px 80px 80px 80px 80px 50px 50px 50px 120px 80px;
+    grid-template-columns: 50px 100px 100px 200px 100px 50px 80px 80px 80px 80px 50px 100px 50px 120px 80px;
     list-style: none;
     padding: 4px 8px;
     margin: 0;

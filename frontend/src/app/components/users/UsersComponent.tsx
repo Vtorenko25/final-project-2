@@ -44,9 +44,9 @@ export default function UsersComponent() {
                 users.map((user, index) => (
                     <ul key={user._id}>
                         <li>{totalUsers - ((page - 1) * usersPerPage + index)}</li>
-                        <li>{user.email ? user.email : "null"}</li>
-                        <li>{user.surname ? user.surname : "null"}</li>
                         <li>{user.name ? user.name : "null"}</li>
+                        <li>{user.surname ? user.surname : "null"}</li>
+                        <li>{user.email ? user.email : "null"}</li>
                         <li>{user.phone ? user.phone : "null"}</li>
                         <li>{user.age ? user.age : "null"}</li>
                         <li>{user.course ? user.course : "null"}</li>
