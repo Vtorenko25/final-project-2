@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { IUser } from "@/app/models/IUser";
 import { userService } from "@/app/services/user.service";
 
@@ -10,15 +10,16 @@ import HeaderComponent from "@/app/components/header/HeaderComponent";
 
 export default function UsersComponent() {
     const searchParams = useSearchParams();
+    const router = useRouter();
+
     const [users, setUsers] = useState<IUser[]>([]);
     const [totalUsers, setTotalUsers] = useState(0);
     const [sortColumn, setSortColumn] = useState<string>("id");
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
     const page = parseInt(searchParams.get('page') || '1', 10);
     const usersPerPage = 25;
 
-    // функція сортування
     const sortData = (data: IUser[], column: string, order: "asc" | "desc") => {
         const sorted = [...data].sort((a, b) => {
             const valA = a[column as keyof IUser] ?? "";
@@ -36,14 +37,13 @@ export default function UsersComponent() {
     };
 
     useEffect(() => {
-        // спочатку отримуємо загальну кількість користувачів, щоб порахувати totalPages
         userService.getAllUsers(1)
             .then((data) => {
                 const total = data.total || data.data?.length || 0;
                 setTotalUsers(total);
 
                 const totalPages = Math.ceil(total / usersPerPage);
-                const serverPage = totalPages - page + 1; // "реверс" сторінок
+                const serverPage = totalPages - page + 1;
 
                 userService.getAllUsers(serverPage)
                     .then((data) => {
@@ -59,15 +59,21 @@ export default function UsersComponent() {
             });
     }, [page, sortColumn, sortOrder]);
 
+    const handleSortChange = (column: string, order: "asc" | "desc") => {
+        setSortColumn(column);
+        setSortOrder(order);
+
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("order", column);
+        router.push(`${window.location.pathname}?${params.toString()}`);
+    };
+
     return (
         <div className="users-container">
             <HeaderComponent
                 sortColumn={sortColumn}
                 sortOrder={sortOrder}
-                onSortChange={(col, order) => {
-                    setSortColumn(col);
-                    setSortOrder(order);
-                }}
+                onSortChange={handleSortChange}
             />
 
             {users.length > 0 ? (
@@ -104,4 +110,3 @@ export default function UsersComponent() {
         </div>
     );
 }
-//
