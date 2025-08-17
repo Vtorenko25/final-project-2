@@ -1,17 +1,15 @@
-import {IUser} from "@/app/models/IUser";
-import {urlBuilder} from "@/app/services/api.service";
+
+import { urlBuilder } from "@/app/services/api.service";
 
 export const userService = {
-    getAllUsers: async (): Promise<IUser[]> => {
+    getAllUsers: async (page: number) => {
         try {
             const tokensPair = localStorage.getItem('tokens');
-            if (!tokensPair) {
-                throw new Error("No tokens found in localStorage");
-            }
+            if (!tokensPair) throw new Error("No tokens found in localStorage");
 
             const { accessToken } = JSON.parse(tokensPair);
 
-            const response = await fetch(urlBuilder.getAllUsers(), {
+            const response = await fetch(urlBuilder.getAllUsers(page), {
                 method: 'GET',
                 headers: {
                     accept: 'application/json',
@@ -24,7 +22,7 @@ export const userService = {
                 throw new Error(error.message || 'Failed to fetch users');
             }
 
-            return await response.json();
+            return await response.json(); // <-- тут вже готовий JSON
         } catch (error) {
             console.error("Error fetching users:", error);
             throw error;

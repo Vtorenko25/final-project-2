@@ -1,6 +1,6 @@
 import joi from "joi";
 
-import { regexConstant } from "../constans/regex.constant";
+import { regexConstant } from "../constants/regex.constant";
 import { OrderEnum } from "../enums/order.enum";
 import { UserListOrderEnum } from "../enums/user-list-order.enum";
 

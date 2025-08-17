@@ -1,0 +1,17 @@
+export const headerColumns =  [
+    "id",
+    "name",
+    "surname",
+    "email",
+    "phone",
+    "age",
+    "course",
+    "course_format",
+    "course_type",
+    "status",
+    "sum",
+    "already_paid",
+    "group",
+    "created_at",
+    "manager",
+];
