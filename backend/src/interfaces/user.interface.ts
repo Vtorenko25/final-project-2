@@ -19,6 +19,8 @@ export interface IUser {
   utm: string;
   msg?: string;
   status?: string;
+  manager?: string;
+  group?: string;
 }
 
 export interface IUserListQuery {
@@ -47,6 +49,8 @@ export type IUserResponse = Pick<
   | "utm"
   | "msg"
   | "status"
+  | "manager"
+  | "group"
 >;
 
 export interface IUserListResponse {

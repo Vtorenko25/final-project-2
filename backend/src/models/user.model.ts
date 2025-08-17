@@ -12,7 +12,7 @@ const userSchema = new Schema({
   course: { type: String, required: true },
   course_format: { type: String, required: true },
   course_type: { type: String, required: true },
-  sum: { type: Number, default: null },
+  sum: { type: Number, required: true },
   already_paid: { type: Boolean, default: null },
   group: { type: String, default: null },
   created_at: { type: Date, default: Date.now },

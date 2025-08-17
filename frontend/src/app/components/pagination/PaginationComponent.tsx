@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
+import "./pagination-component.css"
 
 export default function PaginationComponent() {
     const searchParams = useSearchParams();
@@ -66,7 +67,7 @@ export default function PaginationComponent() {
     const paginationButtons = createPagination();
 
     return (
-        <div style={{ display: 'flex', gap: '5px' }}>
+        <div className="paginationButtons">
             {paginationButtons.map((btn, idx) => {
                 if (btn === 'prevArrow') {
                     return (

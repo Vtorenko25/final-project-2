@@ -24,6 +24,8 @@ class UserPresenter {
       utm: entity.utm,
       msg: entity.msg,
       status: entity.status,
+      manager: entity.manager,
+      group: entity.group,
     };
   }
 
