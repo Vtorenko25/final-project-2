@@ -4,21 +4,44 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { IUser } from "@/app/models/IUser";
 import { userService } from "@/app/services/user.service";
+
 import "./users-component.css";
+import HeaderComponent from "@/app/components/header/HeaderComponent";
 
 export default function UsersComponent() {
     const searchParams = useSearchParams();
     const [users, setUsers] = useState<IUser[]>([]);
     const [totalUsers, setTotalUsers] = useState(0);
+    const [sortColumn, setSortColumn] = useState<string>("id");
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
     const page = parseInt(searchParams.get('page') || '1', 10);
     const usersPerPage = 25;
+
+    // функція сортування
+    const sortData = (data: IUser[], column: string, order: "asc" | "desc") => {
+        const sorted = [...data].sort((a, b) => {
+            const valA = a[column as keyof IUser] ?? "";
+            const valB = b[column as keyof IUser] ?? "";
+
+            if (typeof valA === "number" && typeof valB === "number") {
+                return order === "asc" ? valA - valB : valB - valA;
+            }
+
+            return order === "asc"
+                ? String(valA).localeCompare(String(valB))
+                : String(valB).localeCompare(String(valA));
+        });
+        return sorted;
+    };
 
     useEffect(() => {
         userService.getAllUsers(page)
             .then((data) => {
                 const fetchedUsers = Array.isArray(data.data) ? data.data : data;
                 const total = data.total || fetchedUsers.length;
-                setUsers(fetchedUsers);
+                const sorted = sortData(fetchedUsers, sortColumn, sortOrder);
+                setUsers(sorted);
                 setTotalUsers(total);
             })
             .catch(err => {
@@ -26,10 +49,20 @@ export default function UsersComponent() {
                 setUsers([]);
                 setTotalUsers(0);
             });
-    }, [page]);
+    }, [page, sortColumn, sortOrder]);
 
     return (
         <div className="users-container">
+            {/* передаємо callback для зміни сортування */}
+            <HeaderComponent
+                sortColumn={sortColumn}
+                sortOrder={sortOrder}
+                onSortChange={(col, order) => {
+                    setSortColumn(col);
+                    setSortOrder(order);
+                }}
+            />
+
             {users.length > 0 ? (
                 users.map((user, index) => (
                     <ul key={user._id}>
