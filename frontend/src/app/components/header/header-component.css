@@ -12,6 +12,7 @@
     flex-direction: column;
     gap: 4px;
     color: white;
+    margin-bottom: 1vh;
 }
 .header-component ul {
     width: 100%;
