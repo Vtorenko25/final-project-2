@@ -1,17 +1,17 @@
 .header-component {
-    width: 1338px;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 4px;
-    background-color: green;
     color: white;
 }
 .header-component ul {
+    width: 100%;
+    background-color: green;
     display: grid;
-    grid-template-columns: 50px 100px 100px 200px 100px 50px 80px 80px 80px 80px 50px 100px 50px 120px 80px;
+    grid-template-columns: 2vw 4vw 5vw 12vw 6vw 2vw 4vw 6vw 4vw 5vw 4vw 6vw 4vw 8vw 4vw;
     list-style: none;
     padding: 4px 8px;
     margin: 0;
