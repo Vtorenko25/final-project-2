@@ -22,7 +22,7 @@ export const userService = {
                 throw new Error(error.message || 'Failed to fetch users');
             }
 
-            return await response.json(); // <-- тут вже готовий JSON
+            return await response.json();
         } catch (error) {
             console.error("Error fetching users:", error);
             throw error;
