@@ -8,10 +8,12 @@ export default function PaginationComponent() {
     const router = useRouter();
 
     const totalPages = 20;
-    const page = +(searchParams.get('page') || '1');
+    const rawPage = +(searchParams.get('page') || '1');
+
+    const page = Math.min(Math.max(rawPage, 1), totalPages);
 
     const handlePageClick = (num: number) => {
-        if (num >= 1 && num <= totalPages) {
+        if (num >= 1 && num <= totalPages && num !== page) {
             router.push(`?page=${num}`);
         }
     };
@@ -85,14 +87,14 @@ export default function PaginationComponent() {
                 }
                 if (btn === 'prevDots') {
                     return (
-                        <button key={idx} onClick={() => handlePageClick(page - 7)}>
+                        <button key={idx} onClick={() => handlePageClick(Math.max(page - 7, 1))}>
                             ...
                         </button>
                     );
                 }
                 if (btn === 'nextDots') {
                     return (
-                        <button key={idx} onClick={() => handlePageClick(page + 7)}>
+                        <button key={idx} onClick={() => handlePageClick(Math.min(page + 7, totalPages))}>
                             ...
                         </button>
                     );
@@ -101,7 +103,7 @@ export default function PaginationComponent() {
                     <button
                         key={idx}
                         onClick={() => handlePageClick(btn as number)}
-                        disabled={page === btn}
+                        className={page === btn ? "active" : ""}
                     >
                         {btn}
                     </button>

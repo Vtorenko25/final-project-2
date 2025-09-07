@@ -17,3 +17,9 @@
     height: 32px;
     cursor: pointer;
 }
+
+.paginationButtons button.active {
+    background-color: darkgreen;
+    font-weight: bold;
+    opacity: 1;
+}

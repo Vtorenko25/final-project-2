@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { IUser } from "@/app/models/IUser";
 import { IComment } from "@/app/models/IComment";
 import { userService } from "@/app/services/user.service";
@@ -10,6 +10,7 @@ import { sortData } from "@/app/helpers/sortData";
 
 import HeaderComponent from "@/app/components/header/HeaderComponent";
 import CommentComponent from "@/app/components/comments/CommentsComponent";
+
 import "./users-component.css";
 
 export default function UsersComponent() {
@@ -18,15 +19,19 @@ export default function UsersComponent() {
 
     const [users, setUsers] = useState<IUser[]>([]);
     const [totalUsers, setTotalUsers] = useState<number>(0);
-    const [sortColumn, setSortColumn] = useState<string>("id");
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
     const [openUserId, setOpenUserId] = useState<string | null>(null);
 
     const [comments, setComments] = useState<Record<string, string[]>>({});
     const [newComment, setNewComment] = useState<Record<string, string>>({});
 
-    const page = parseInt(searchParams.get('page') || '1', 10);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const sortColumn = searchParams.get("order") || "id";
+    const sortOrder = (searchParams.get("direction") as "asc" | "desc") || "asc";
+
     const usersPerPage = 25;
+
+    const displayValue = (value: any) =>
+        value === null || value === undefined || value === "" ? "null" : value;
 
     useEffect(() => {
         const fetchUsersAndComments = async () => {
@@ -36,28 +41,30 @@ export default function UsersComponent() {
                 setTotalUsers(total);
 
                 const totalPages = Math.ceil(total / usersPerPage);
-                const serverPage = totalPages - page + 1;
+                const serverPage = Math.max(totalPages - page + 1, 1);
 
                 const data = await userService.getAllUsers(serverPage);
                 const fetchedUsers: IUser[] = Array.isArray(data.data) ? data.data : data;
+
                 const sortedUsers = sortData(fetchedUsers, sortColumn, sortOrder);
                 setUsers(sortedUsers);
-
 
                 const commentsMap: Record<string, string[]> = {};
                 await Promise.all(
                     sortedUsers.map(async (user) => {
                         try {
-                            const userComments: IComment[] = await commentService.getCommentsByUser(user.id.toString());
-                            commentsMap[user._id] = userComments.map(c => c.content);
-                        } catch (err) {
+                            const userComments: IComment[] = await commentService.getCommentsByUser(
+                                user.id.toString()
+                            );
+                            commentsMap[user._id] = userComments.map((c) => c.content);
+                        } catch {
                             commentsMap[user._id] = [];
                         }
                     })
                 );
                 setComments(commentsMap);
             } catch (err) {
-                console.error('Помилка завантаження:', err);
+                console.error("Помилка завантаження:", err);
                 setUsers([]);
                 setTotalUsers(0);
             }
@@ -67,11 +74,9 @@ export default function UsersComponent() {
     }, [page, sortColumn, sortOrder]);
 
     const handleSortChange = (column: string, order: "asc" | "desc") => {
-        setSortColumn(column);
-        setSortOrder(order);
-
         const params = new URLSearchParams(searchParams.toString());
         params.set("order", column);
+        params.set("direction", order);
         router.push(`${window.location.pathname}?${params.toString()}`);
     };
 
@@ -83,38 +88,39 @@ export default function UsersComponent() {
         setNewComment((prev) => ({ ...prev, [userId]: value }));
     };
 
-    const handleAddComment = async (user: IUser) => {
-        const text = newComment[user._id];
-        if (!text) return;
+    const handleAddComment = useCallback(
+        async (user: IUser) => {
+            const text = newComment[user._id];
+            if (!text) return;
 
-        try {
-            const dto: IComment = {
-                userId: user._id,
-                crmId: user.id,
-                content: text,
-                manager: user.manager || "admin",
-            };
+            try {
+                const dto: IComment = {
+                    userId: user._id,
+                    crmId: user.id,
+                    content: text,
+                    manager: user.manager || "admin",
+                };
 
-            const savedComment = await commentService.createComment(dto);
+                const savedComment = await commentService.createComment(dto);
 
-            setComments((prev) => ({
-                ...prev,
-                [user._id]: [...(prev[user._id] || []), savedComment.content],
-            }));
+                setComments((prev) => ({
+                    ...prev,
+                    [user._id]: [...(prev[user._id] || []), savedComment.content],
+                }));
 
-            setNewComment((prev) => ({ ...prev, [user._id]: "" }));
+                setNewComment((prev) => ({ ...prev, [user._id]: "" }));
 
-            setUsers((prev) =>
-                prev.map((u) =>
-                    u._id === user._id && !u.status
-                        ? { ...u, status: "In Work" }
-                        : u
-                )
-            );
-        } catch (err) {
-            console.error("Помилка при створенні коментаря:", err);
-        }
-    };
+                setUsers((prev) =>
+                    prev.map((u) =>
+                        u._id === user._id && !u.status ? { ...u, status: "In Work" } : u
+                    )
+                );
+            } catch (err) {
+                console.error("Помилка при створенні коментаря:", err);
+            }
+        },
+        [newComment]
+    );
 
     return (
         <div className="users-container">
@@ -123,32 +129,34 @@ export default function UsersComponent() {
                 sortOrder={sortOrder}
                 onSortChange={handleSortChange}
             />
+
             {users.length > 0 ? (
                 users.map((user) => (
                     <div key={user._id} className="user-block">
                         <ul className="user-row" onClick={() => toggleComments(user._id)}>
-                            <li>{user.id || "null"}</li>
-                            <li>{user.name || "null"}</li>
-                            <li>{user.surname || "null"}</li>
-                            <li>{user.email || "null"}</li>
-                            <li>{user.phone || "null"}</li>
-                            <li>{user.age || "null"}</li>
-                            <li>{user.course || "null"}</li>
-                            <li>{user.course_format || "null"}</li>
-                            <li>{user.course_type || "null"}</li>
-                            <li>{user.status || "null"}</li>
-                            <li>{user.sum || "null"}</li>
-                            <li>{user.already_paid || "null"}</li>
-                            <li>{user.group || "null"}</li>
-                            <li>{user.created_at
-                                ? new Date(user.created_at).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })
-                                : "null"}
+                            <li>{displayValue(user.id)}</li>
+                            <li>{displayValue(user.name)}</li>
+                            <li>{displayValue(user.surname)}</li>
+                            <li>{displayValue(user.email)}</li>
+                            <li>{displayValue(user.phone)}</li>
+                            <li>{displayValue(user.age)}</li>
+                            <li>{displayValue(user.course)}</li>
+                            <li>{displayValue(user.course_format)}</li>
+                            <li>{displayValue(user.course_type)}</li>
+                            <li>{displayValue(user.status)}</li>
+                            <li>{displayValue(user.sum)}</li>
+                            <li>{displayValue(user.already_paid)}</li>
+                            <li>{displayValue(user.group)}</li>
+                            <li>
+                                {user.created_at
+                                    ? new Date(user.created_at).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })
+                                    : "null"}
                             </li>
-                            <li>{user.manager || "admin"}</li>
+                            <li>{displayValue(user.manager || "admin")}</li>
                         </ul>
 
                         {openUserId === user._id && (
@@ -168,3 +176,4 @@ export default function UsersComponent() {
         </div>
     );
 }
+
