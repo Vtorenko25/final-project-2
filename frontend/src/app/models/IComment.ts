@@ -4,4 +4,5 @@ export interface IComment {
     title?: string;
     content: string;
     manager: string;
+    createdAt: string;
 }

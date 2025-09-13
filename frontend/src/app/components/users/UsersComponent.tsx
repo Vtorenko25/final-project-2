@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -21,7 +22,7 @@ export default function UsersComponent() {
     const [totalUsers, setTotalUsers] = useState<number>(0);
     const [openUserId, setOpenUserId] = useState<string | null>(null);
 
-    const [comments, setComments] = useState<Record<string, string[]>>({});
+    const [comments, setComments] = useState<Record<string, IComment[]>>({});
     const [newComment, setNewComment] = useState<Record<string, string>>({});
 
     const page = parseInt(searchParams.get("page") || "1", 10);
@@ -49,14 +50,15 @@ export default function UsersComponent() {
                 const sortedUsers = sortData(fetchedUsers, sortColumn, sortOrder);
                 setUsers(sortedUsers);
 
-                const commentsMap: Record<string, string[]> = {};
+                // Завантажуємо коментарі для кожного користувача
+                const commentsMap: Record<string, IComment[]> = {};
                 await Promise.all(
                     sortedUsers.map(async (user) => {
                         try {
                             const userComments: IComment[] = await commentService.getCommentsByUser(
                                 user.id.toString()
                             );
-                            commentsMap[user._id] = userComments.map((c) => c.content);
+                            commentsMap[user._id] = userComments;
                         } catch {
                             commentsMap[user._id] = [];
                         }
@@ -99,13 +101,15 @@ export default function UsersComponent() {
                     crmId: user.id,
                     content: text,
                     manager: user.manager || "admin",
+                    createdAt: new Date().toISOString(),
+                    title: "",
                 };
 
                 const savedComment = await commentService.createComment(dto);
 
                 setComments((prev) => ({
                     ...prev,
-                    [user._id]: [...(prev[user._id] || []), savedComment.content],
+                    [user._id]: [...(prev[user._id] || []), savedComment],
                 }));
 
                 setNewComment((prev) => ({ ...prev, [user._id]: "" }));
@@ -176,6 +180,3 @@ export default function UsersComponent() {
         </div>
     );
 }
-
-
-

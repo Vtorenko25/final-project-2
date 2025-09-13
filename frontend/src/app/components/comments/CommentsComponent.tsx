@@ -32,41 +32,52 @@ const CommentComponent: FC<ICommentComponentProps> = ({
     return (
         <div className="comments">
 
-            <div className="message_utm_block">
+            <div className="message_block">
             <div><strong>Message:</strong> {user.msg ? String(user.msg) : "null"}</div>
             <div><strong>UTM:</strong> {user.utm ? String(user.utm) : "null"}</div>
             </div>
+            <div>
 
-            <div className="comments_block">
-            {comments[user._id]?.length ? (
-                <div style={{marginTop: '10px'}}>
-                    <h4>Comments</h4>
-                    <ul>
-                        {comments[user._id].map((c, idx) => (
-                            <li key={idx}>{c}</li>
-                        ))}
-                    </ul>
+                <div className="comments_block">
+                    {comments[user._id]?.length ? (
+                        <div >
+                                {comments[user._id].map((comment, index) => (
+                                    <div className="comments_block_comment" key={index}>
+                                        <div>{comment.content} </div>
+                                        <div className="comments_block_manager">
+                                        <div>{comment.manager}</div>
+                                        <div> {comment.createdAt
+                                            ? new Date(comment.createdAt).toLocaleString("uk-UA", {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
+                                            })
+                                            : "—"} </div></div></div>
+                                ))}
+                        </div>
+                    ) : null}
+                    <div className="comments-section">
+                        <input
+                            type="text"
+                            value={newComment[user._id] || ""}
+                            onChange={(e) => handleInputChange(user._id, e.target.value)}
+                            placeholder="Comment"
+                            disabled={loading}
+                        />
+                        <button onClick={submitComment} disabled={loading}>
+                            {loading ? "Submitting..." : "Submit"}
+                        </button>
+                        {error && <p>{error}</p>}
+                    </div>
                 </div>
-            ) : null}
-            <div className="comments-section">
-                <input
-                    type="text"
-                    value={newComment[user._id] || ""}
-                    onChange={(e) => handleInputChange(user._id, e.target.value)}
-                    placeholder="Comment"
-                    disabled={loading}
-                    style={{padding: '6px', marginRight: '8px'}}
-                />
-                <button onClick={submitComment} disabled={loading}>
-                    {loading ? "Submitting..." : "Submit"}
-                </button>
-                {error && <p>{error}</p>}
-            </div>
             </div>
 
+            <button className="button_edit">EDIT</button>
 
         </div>
     );
 };
 
 export default CommentComponent;
+
+
