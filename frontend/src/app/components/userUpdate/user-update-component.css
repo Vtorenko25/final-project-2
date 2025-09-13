@@ -59,7 +59,7 @@
     border-radius: 4px;
     border: none;
     cursor: pointer;
-    background-color: #0070f3;
+    background-color: rgba(0, 128, 0, 0.91);
     color: white;
     font-weight: bold;
     transition: background-color 0.2s ease;
@@ -70,10 +70,10 @@
 }
 
 .modal-actions button:last-child {
-    background-color: #ccc;
-    color: #000;
+    background-color: rgba(0, 128, 0, 0.91);
+    color: white;
 }
 
 .modal-actions button:last-child:hover {
-    background-color: #aaa;
+    background-color: #005bb5;
 }
