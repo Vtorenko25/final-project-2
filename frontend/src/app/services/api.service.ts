@@ -5,4 +5,5 @@ export const urlBuilder = {
     authUser: () => `${base}/auth/sign-in`,
     createComment:()=> `${base}/comment/create`,
     getCommentsByUser: (crmId:string) => `${base}/comment/${crmId}`,
+    updateUserById: (id: string) => `${base}/users/${id}`,
 };

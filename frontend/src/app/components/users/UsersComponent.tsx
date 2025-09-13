@@ -90,6 +90,42 @@ export default function UsersComponent() {
         setNewComment((prev) => ({ ...prev, [userId]: value }));
     };
 
+    // const handleAddComment = useCallback(
+    //     async (user: IUser) => {
+    //         const text = newComment[user._id];
+    //         if (!text) return;
+    //
+    //         try {
+    //             const dto: IComment = {
+    //                 userId: user._id,
+    //                 crmId: user.id,
+    //                 content: text,
+    //                 manager: user.manager || "admin",
+    //                 createdAt: new Date().toISOString(),
+    //                 title: "",
+    //             };
+    //
+    //             const savedComment = await commentService.createComment(dto);
+    //
+    //             setComments((prev) => ({
+    //                 ...prev,
+    //                 [user._id]: [...(prev[user._id] || []), savedComment],
+    //             }));
+    //
+    //             setNewComment((prev) => ({ ...prev, [user._id]: "" }));
+    //
+    //             setUsers((prev) =>
+    //                 prev.map((user) =>
+    //                     user._id === user._id && !user.status ? { ...user, status: "In Work" } : user
+    //                 )
+    //             );
+    //         } catch (err) {
+    //             console.error("Помилка при створенні коментаря:", err);
+    //         }
+    //     },
+    //     [newComment]
+    // );
+
     const handleAddComment = useCallback(
         async (user: IUser) => {
             const text = newComment[user._id];
@@ -115,10 +151,13 @@ export default function UsersComponent() {
                 setNewComment((prev) => ({ ...prev, [user._id]: "" }));
 
                 setUsers((prev) =>
-                    prev.map((user) =>
-                        user._id === user._id && !user.status ? { ...user, status: "In Work" } : user
+                    prev.map((u) =>
+                        u._id === user._id ? { ...u, status: "In Work" } : u
                     )
                 );
+
+                await userService.updateUserById(user._id, { status: "In Work" });
+
             } catch (err) {
                 console.error("Помилка при створенні коментаря:", err);
             }
