@@ -1,6 +1,9 @@
 import { FilterQuery } from "mongoose";
 
-import { IUser, IUserListQuery } from "../interfaces/user.interface";
+import {
+  IUser,
+  IUserListQuery,
+} from "../interfaces/user.interface";
 import { User } from "../models/user.model";
 
 class UserRepository {
@@ -14,6 +17,14 @@ class UserRepository {
       User.find(filterObj).limit(query.limit).skip(skip),
       User.countDocuments(filterObj),
     ]);
+  }
+
+  public async getById(userId: string): Promise<IUser | null> {
+    return await User.findById(userId);
+  }
+
+  public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
+    return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
 }
 

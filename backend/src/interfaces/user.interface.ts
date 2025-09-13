@@ -59,3 +59,19 @@ export interface IUserListResponse {
   data: IUserResponse[];
   total: number;
 }
+
+export type IUserUpdateDto = Pick<
+  IUser,
+  | "group"
+  | "status"
+  | "name"
+  | "sum"
+  | "surname"
+  | "already_paid"
+  | "email"
+  | "course"
+  | "phone"
+  | "course_format"
+  | "age"
+  | "course_type"
+>;

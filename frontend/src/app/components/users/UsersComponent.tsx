@@ -115,8 +115,8 @@ export default function UsersComponent() {
                 setNewComment((prev) => ({ ...prev, [user._id]: "" }));
 
                 setUsers((prev) =>
-                    prev.map((u) =>
-                        u._id === user._id && !u.status ? { ...u, status: "In Work" } : u
+                    prev.map((user) =>
+                        user._id === user._id && !user.status ? { ...user, status: "In Work" } : user
                     )
                 );
             } catch (err) {

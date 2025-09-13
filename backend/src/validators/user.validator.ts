@@ -6,10 +6,19 @@ import { UserListOrderEnum } from "../enums/user-list-order.enum";
 
 export class UserValidator {
   private static name = joi.string().min(3).max(50).trim();
-  private static age = joi.number().min(18).max(200);
+  private static surname = joi.string().min(3).max(50).trim();
   private static email = joi.string().regex(regexConstant.EMAIL).trim();
-  private static password = joi.string().regex(regexConstant.PASSWORD).trim();
   private static phone = joi.string().regex(regexConstant.PHONE).trim();
+  private static age = joi.number().min(18).max(200);
+  private static course = joi.string().min(3).max(10).trim();
+  private static course_format = joi.string().min(3).max(20).trim();
+  private static course_type = joi.string().min(3).max(20).trim();
+  private static status = joi.string().min(3).max(20).trim();
+  private static sum = joi.string().min(3).max(20).trim();
+  private static already_paid = joi.string().min(3).max(20).trim();
+  private static manager = joi.string().min(3).max(20).trim();
+  private static password = joi.string().regex(regexConstant.PASSWORD).trim();
+  private static group = joi.string().min(3).max(10).trim();
 
   public static create = joi.object({
     name: this.name.required(),
@@ -19,15 +28,25 @@ export class UserValidator {
     phone: this.phone.optional(),
   });
 
-  // public static update = joi.object({
-  //   name: this.name,
-  //   age: this.age,
-  //   phone: this.phone,
-  // });
-
   public static login = joi.object({
     email: this.email.required(),
     password: this.password.required(),
+  });
+
+  public static update = joi.object({
+    name: this.name,
+    surname: this.surname,
+    email: this.email.email,
+    phone: this.phone,
+    age: this.age,
+    course: this.course,
+    course_format: this.course_format,
+    course_type: this.course_type,
+    status: this.status,
+    sum: this.sum,
+    already_paid: this.already_paid,
+    manager: this.manager,
+    group: this.group,
   });
 
   public static listQuery = joi.object({
