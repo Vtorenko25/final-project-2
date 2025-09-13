@@ -9,8 +9,8 @@ export interface IUser {
     course: string;
     course_format: string;
     course_type: string;
-    sum?: number;
-    already_paid?: number;
+    sum?: string;
+    already_paid?: string;
     created_at: string;
     utm: string;
     msg?: string;

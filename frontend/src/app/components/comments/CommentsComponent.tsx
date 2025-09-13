@@ -1,18 +1,21 @@
 'use client';
 
-import {FC, useState} from 'react';
-import {ICommentComponentProps} from "@/app/models/ICommentComponentProps";
+import { FC, useState } from 'react';
+import { ICommentComponentProps } from "@/app/models/ICommentComponentProps";
 import "./comments-component.css";
+import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
 
-const CommentComponent: FC<ICommentComponentProps> = ({
-                                                          user,
-                                                          comments,
-                                                          newComment,
-                                                          handleInputChange,
-                                                          handleAddComment,
-                                                      }) => {
+const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUser: any) => void }> = ({
+                                                                                                          user,
+                                                                                                          comments,
+                                                                                                          newComment,
+                                                                                                          handleInputChange,
+                                                                                                          handleAddComment,
+                                                                                                          onUpdateUser
+                                                                                                      }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     const submitComment = async () => {
         const text = newComment[user._id];
@@ -23,8 +26,6 @@ const CommentComponent: FC<ICommentComponentProps> = ({
 
         try {
             await handleAddComment(user);
-
-            // Очищаємо input після успішного додавання
             handleInputChange(user._id, "");
         } catch (err: any) {
             setError(err.message || "Помилка при додаванні коментаря");
@@ -35,7 +36,6 @@ const CommentComponent: FC<ICommentComponentProps> = ({
 
     return (
         <div className="comments">
-
             <div className="message_block">
                 <div><strong>Message:</strong> {user.msg || "null"}</div>
                 <div><strong>UTM:</strong> {user.utm || "null"}</div>
@@ -43,25 +43,22 @@ const CommentComponent: FC<ICommentComponentProps> = ({
 
             <div className="comments_block">
                 {comments[user._id]?.length ? (
-                    <div>
-                        {comments[user._id].map((comment) => (
-                            <div className="comments_block_comment">
-                                <div>{comment.content}</div>
-                                <div className="comments_block_manager">
-                                    <div>{comment.manager}</div>
-                                    <div>
-                                        {comment.createdAt
-                                            ? new Date(comment.createdAt).toLocaleString("uk-UA", {
-                                                day: "2-digit",
-                                                month: "long",
-                                                year: "numeric",
-                                            })
-                                            : "—"}
-                                    </div>
+                    comments[user._id].map((comment) => (
+                        <div className="comments_block_comment" key={comment.createdAt + comment.content}>
+                            <div>{comment.content}</div>
+                            <div className="comments_block_manager">
+                                <div>{comment.manager}</div>
+                                <div>{comment.createdAt
+                                    ? new Date(comment.createdAt).toLocaleString("uk-UA", {
+                                        day: "2-digit",
+                                        month: "long",
+                                        year: "numeric",
+                                    })
+                                    : "—"}
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))
                 ) : (
                     <p>Коментарів немає</p>
                 )}
@@ -81,7 +78,15 @@ const CommentComponent: FC<ICommentComponentProps> = ({
                 </div>
             </div>
 
-            <button className="button_edit">EDIT</button>
+            <button className="button_edit" onClick={() => setShowEditModal(true)}>EDIT</button>
+
+            {showEditModal && (
+                <UserUpdateComponent
+                    user={user}
+                    onClose={() => setShowEditModal(false)}
+                    onUpdateUser={onUpdateUser}
+                />
+            )}
         </div>
     );
 };
