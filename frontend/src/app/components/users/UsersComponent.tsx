@@ -117,7 +117,7 @@ export default function UsersComponent() {
                 });
 
                 setUsers((prev) =>
-                    prev.map((user) => (user._id === user._id ? { ...user, ...inWork } : user))
+                    prev.map((u) => (u._id === user._id ? { ...u, ...inWork } : u))
                 );
 
             } catch (err) {
