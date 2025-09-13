@@ -50,7 +50,6 @@ export default function UsersComponent() {
                 const sortedUsers = sortData(fetchedUsers, sortColumn, sortOrder);
                 setUsers(sortedUsers);
 
-                // Завантажуємо коментарі для кожного користувача
                 const commentsMap: Record<string, IComment[]> = {};
                 await Promise.all(
                     sortedUsers.map(async (user) => {
@@ -90,42 +89,6 @@ export default function UsersComponent() {
         setNewComment((prev) => ({ ...prev, [userId]: value }));
     };
 
-    // const handleAddComment = useCallback(
-    //     async (user: IUser) => {
-    //         const text = newComment[user._id];
-    //         if (!text) return;
-    //
-    //         try {
-    //             const dto: IComment = {
-    //                 userId: user._id,
-    //                 crmId: user.id,
-    //                 content: text,
-    //                 manager: user.manager || "admin",
-    //                 createdAt: new Date().toISOString(),
-    //                 title: "",
-    //             };
-    //
-    //             const savedComment = await commentService.createComment(dto);
-    //
-    //             setComments((prev) => ({
-    //                 ...prev,
-    //                 [user._id]: [...(prev[user._id] || []), savedComment],
-    //             }));
-    //
-    //             setNewComment((prev) => ({ ...prev, [user._id]: "" }));
-    //
-    //             setUsers((prev) =>
-    //                 prev.map((user) =>
-    //                     user._id === user._id && !user.status ? { ...user, status: "In Work" } : user
-    //                 )
-    //             );
-    //         } catch (err) {
-    //             console.error("Помилка при створенні коментаря:", err);
-    //         }
-    //     },
-    //     [newComment]
-    // );
-
     const handleAddComment = useCallback(
         async (user: IUser) => {
             const text = newComment[user._id];
@@ -148,15 +111,14 @@ export default function UsersComponent() {
                     [user._id]: [...(prev[user._id] || []), savedComment],
                 }));
 
-                setNewComment((prev) => ({ ...prev, [user._id]: "" }));
+                const inWork = await userService.updateUserById(user._id, {
+                    status: "In Work",
+                    manager: "admin",
+                });
 
                 setUsers((prev) =>
-                    prev.map((u) =>
-                        u._id === user._id ? { ...u, status: "In Work" } : u
-                    )
+                    prev.map((user) => (user._id === user._id ? { ...user, ...inWork } : user))
                 );
-
-                await userService.updateUserById(user._id, { status: "In Work" });
 
             } catch (err) {
                 console.error("Помилка при створенні коментаря:", err);
@@ -199,7 +161,7 @@ export default function UsersComponent() {
                                     })
                                     : "null"}
                             </li>
-                            <li>{displayValue(user.manager || "admin")}</li>
+                            <li>{displayValue(user.manager || "null")}</li>
                         </ul>
 
                         {openUserId === user._id && (
