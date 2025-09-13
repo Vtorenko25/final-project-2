@@ -11,7 +11,7 @@
 }
 .users-container ul {
     display: grid;
-    grid-template-columns: 2vw 4vw 5vw 12vw 6vw 2vw 4vw 6vw 4vw 5vw 4vw 6vw 4vw 8vw 4vw;
+    grid-template-columns: 2vw 4vw 5vw 12vw 6vw 2vw 4vw 6vw 6vw 5vw 4vw 6vw 4vw 8vw 4vw;
     height: 3vh;
     list-style: none;
     padding: 2px 8px;
