@@ -62,7 +62,7 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
             alert("Немає доступних груп");
             return;
         }
-        const selectedGroup = groups[0]; // можна реалізувати dropdown чи modal вибору
+        const selectedGroup = groups[0];
         setFormData(prev => ({ ...prev, group: selectedGroup }));
     };
 

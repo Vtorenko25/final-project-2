@@ -1,0 +1,7 @@
+.logo-component {
+    height: 10vh;
+    width: 78.5vw;
+    margin: auto;
+    background-color: green;
+    border: 1px solid black;
+}

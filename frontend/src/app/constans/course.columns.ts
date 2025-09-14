@@ -27,3 +27,9 @@ export const courseFormatOptions = [
     "static",
     "online",
 ]
+
+export const groupOptions = [
+    "may-2024",
+    "june-2025",
+    "july-2024",
+]
