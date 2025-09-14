@@ -1,3 +1,104 @@
+/*.modal-overlay {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background: rgba(0,0,0,0.5);*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    z-index: 1000;*/
+/*}*/
+
+/*.modal-content {*/
+/*    background: #fff;*/
+/*    padding: 20px 30px;*/
+/*    max-width: 800px;*/
+/*    width: 100%;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 4px 12px rgba(0,0,0,0.15);*/
+/*}*/
+
+/*.user-form-columns {*/
+/*    display: flex;*/
+/*    gap: 30px;*/
+/*}*/
+
+/*.column {*/
+/*    flex: 1;*/
+/*}*/
+
+/*.form-group {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    margin-bottom: 15px;*/
+/*}*/
+
+/*.form-group label {*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 5px;*/
+/*}*/
+
+/*.form-group input {*/
+/*    padding: 8px;*/
+/*    border-radius: 4px;*/
+/*    border: 1px solid #ccc;*/
+/*    font-size: 14px;*/
+/*}*/
+
+/*.modal-actions {*/
+/*    margin-top: 20px;*/
+/*    display: flex;*/
+/*    gap: 10px;*/
+/*    justify-content: flex-end;*/
+/*}*/
+
+/*.modal-actions button {*/
+/*    padding: 8px 16px;*/
+/*    border-radius: 4px;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    background-color: rgba(0, 128, 0, 0.91);*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    transition: background-color 0.2s ease;*/
+/*}*/
+
+/*.modal-actions button:hover {*/
+/*    background-color: #005bb5;*/
+/*}*/
+
+/*.modal-actions button:last-child {*/
+/*    background-color: rgba(0, 128, 0, 0.91);*/
+/*    color: white;*/
+/*}*/
+
+/*.modal-actions button:last-child:hover {*/
+/*    background-color: #005bb5;*/
+/*}*/
+/*.group-buttons {*/
+/*    display: flex;*/
+/*    gap: 10px;*/
+/*    margin-top: 8px;*/
+/*}*/
+
+/*.group-buttons button {*/
+/*    flex: 1;*/
+/*    padding: 8px 0;*/
+/*    border-radius: 4px;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    background-color: rgba(0, 128, 0, 0.91);*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    font-size: 14px;*/
+/*    transition: background-color 0.2s ease;*/
+/*}*/
+
+/*.group-buttons button:hover {*/
+/*    background-color: #006400;*/
+/*}*/
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -13,67 +114,107 @@
 
 .modal-content {
     background: #fff;
-    padding: 20px 30px;
-    max-width: 800px;
+    padding: 24px 32px;
+    max-width: 900px;
     width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
+/* Дві колонки */
 .user-form-columns {
     display: flex;
-    gap: 30px;
+    gap: 40px;
+    align-items: flex-start;
 }
 
 .column {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* рівні відступи між усіма полями */
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
 }
 
 .form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
     font-size: 14px;
 }
 
+.form-group input,
+.form-group select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #008000;
+    box-shadow: 0 0 4px rgba(0, 128, 0, 0.3);
+    outline: none;
+}
+
+/* Кнопки внизу */
 .modal-actions {
-    margin-top: 20px;
+    margin-top: 25px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: flex-end;
 }
 
 .modal-actions button {
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
     border: none;
     cursor: pointer;
-    background-color: rgba(0, 128, 0, 0.91);
+    background-color: #008000;
     color: white;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+    font-weight: 600;
+    transition: background-color 0.25s ease, transform 0.1s ease;
 }
 
 .modal-actions button:hover {
-    background-color: #005bb5;
+    background-color: #006400;
+    transform: translateY(-2px);
 }
 
 .modal-actions button:last-child {
-    background-color: rgba(0, 128, 0, 0.91);
-    color: white;
+    background-color: #008000;
 }
 
 .modal-actions button:last-child:hover {
-    background-color: #005bb5;
+    background-color: #006400;
+}
+
+/* Дві кнопки під group */
+.group-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.group-buttons button {
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #008000;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.group-buttons button:hover {
+    background-color: #006400;
+    transform: translateY(-2px);
 }
