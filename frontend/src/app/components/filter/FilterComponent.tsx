@@ -1,152 +1,121 @@
 'use client';
 
-import { useState } from "react";
-import "./filter-component.css";
+import React from "react";
 import {
     courseOptions,
     courseFormatOptions,
     courseTypeOptions,
-    statusOptions, groupOptions
+    statusOptions,
+    groupOptions
 } from "@/app/constans/course.columns";
 
+import "./filter-component.css";
 
-export default function FilterComponent() {
-    const [filters, setFilters] = useState({
-        name: "",
-        surname: "",
-        email: "",
-        phone: "",
-        age: "",
-        course: "",
-        format: "",
-        type: "",
-        status: "",
-        group: "",
-        startDate: "",
-        endDate: "",
-    });
+interface FilterProps {
+    filters: Record<string, string>;
+    onFilterChange: (field: string, value: string) => void;
+}
 
-
-    const handleChange = (field: keyof typeof filters, value: string) => {
-        setFilters((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const handleApply = () => {
-        console.log("🔍 Застосовані фільтри:", filters);
-        // TODO: передати фільтри у запит до API
-    };
-
+export default function FilterComponent({ filters, onFilterChange }: FilterProps) {
     return (
         <div className="filter-component">
-            {/* Верхній блок */}
             <div className="filter-row">
                 <input
                     type="text"
                     placeholder="Name"
-                    value={filters.name}
-                    onChange={(e) => handleChange("name", e.target.value)}
+                    value={filters.name || ""}
+                    onChange={(e) => onFilterChange("name", e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Surname"
-                    value={filters.surname}
-                    onChange={(e) => handleChange("surname", e.target.value)}
+                    value={filters.surname || ""}
+                    onChange={(e) => onFilterChange("surname", e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Email"
-                    value={filters.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
+                    value={filters.email || ""}
+                    onChange={(e) => onFilterChange("email", e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Phone"
-                    value={filters.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
+                    value={filters.phone || ""}
+                    onChange={(e) => onFilterChange("phone", e.target.value)}
                 />
                 <input
                     type="number"
                     placeholder="Age"
-                    value={filters.age}
-                    onChange={(e) => handleChange("age", e.target.value)}
+                    value={filters.age || ""}
+                    onChange={(e) => onFilterChange("age", e.target.value)}
                 />
+
                 <select
-                    value={filters.course}
-                    onChange={(e) => handleChange("course", e.target.value)}
+                    value={filters.course || ""}
+                    onChange={(e) => onFilterChange("course", e.target.value)}
                 >
                     <option value="">All courses</option>
                     {courseOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
+                        <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
             </div>
 
-            {/* Нижній блок */}
             <div className="filter-row">
                 <select
-                    value={filters.format}
-                    onChange={(e) => handleChange("format", e.target.value)}
+                    value={filters.format || ""}
+                    onChange={(e) => onFilterChange("format", e.target.value)}
                 >
                     <option value="">All formats</option>
                     {courseFormatOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
+                        <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
 
                 <select
-                    value={filters.type}
-                    onChange={(e) => handleChange("type", e.target.value)}
+                    value={filters.type || ""}
+                    onChange={(e) => onFilterChange("type", e.target.value)}
                 >
                     <option value="">All types</option>
                     {courseTypeOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
+                        <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
 
-                {/* 👇 Новий select для статусів */}
                 <select
-                    value={filters.status}
-                    onChange={(e) => handleChange("status", e.target.value)}
+                    value={filters.status || ""}
+                    onChange={(e) => onFilterChange("status", e.target.value)}
                 >
                     <option value="">All statuses</option>
                     {statusOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
+                        <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
 
                 <select
-                    value={filters.group}
-                    onChange={(e) => handleChange("group", e.target.value)}
+                    value={filters.group || ""}
+                    onChange={(e) => onFilterChange("group", e.target.value)}
                 >
-                    <option value="">all groups</option>
+                    <option value="">All groups</option>
                     {groupOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
+                        <option key={opt} value={opt}>{opt}</option>
                     ))}
                 </select>
 
-
                 <input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => handleChange("startDate", e.target.value)}
+                    type="text"
+                    placeholder="Start date"
+                    value={filters.startDate || ""}
+                    onChange={(e) => onFilterChange("startDate", e.target.value)}
                 />
                 <input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => handleChange("endDate", e.target.value)}
+                    type="text"
+                    placeholder="End date"
+                    value={filters.endDate || ""}
+                    onChange={(e) => onFilterChange("endDate", e.target.value)}
                 />
             </div>
         </div>
     );
 }
-

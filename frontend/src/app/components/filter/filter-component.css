@@ -1,33 +1,51 @@
-.filter-component {
-    height: 10vh;
-    width: 78.5vw;
-    margin: auto;
-    border: 1px solid black;
-}
 
 .filter-component {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background: #f9f9f9;
-    border-radius: 8px;
+    gap: 5px;
+    padding: 5px;
+    width: 70vw;
+    margin: 5px auto;
 }
-
 .filter-row {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 5px;
 }
 
 .filter-row input,
 .filter-row select {
-    padding: 6px 10px;
+    padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-row input[type="number"] {
+    -moz-appearance: textfield;
+}
+.filter-row input[type="number"]::-webkit-inner-spin-button,
+.filter-row input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .filter-actions {
     display: flex;
     justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.filter-row input:hover,
+.filter-row select:hover {
+    border-color: #999;
+}
+
+.filter-row input:focus,
+.filter-row select:focus {
+    border-color: #666;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
