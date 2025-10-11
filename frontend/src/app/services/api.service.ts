@@ -8,6 +8,6 @@ export const urlBuilder = {
     updateUserById: (id: string) => `${base}/users/${id}`,
     getAllGroups: () => `/groups`,
     createGroup: () => `/groups`,
-    // updateGroup: (id: string) => `/groups/${id}`,
-    // deleteGroup: (id: string) => `/groups/${id}`,
+    createManager:()=>`${base}/managers/create`,
+    getAllManagers: (page:number) => `${base}/managers?page=${page}`,
 };

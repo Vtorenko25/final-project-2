@@ -1,0 +1,45 @@
+.logo-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+    width: 78.5vw;
+    margin: auto;
+    padding: 16px;
+    background-color: green;
+    border: 1px solid black;
+}
+.logo, .role {
+    color: white;
+}
+.logo-component-admin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.button-admin,
+.button-exit {
+    background-color: #215521;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button-admin:hover,
+.button-exit:hover {
+    background-color: darkgreen;
+}
+
+.button-admin svg,
+.button-exit svg {
+    color: white;
+    width: 18px;
+    height: 18px;
+}

@@ -12,7 +12,6 @@ router.get("/:crmId", commentController.getCommentById);
 router.post(
   "/create",
   authMiddleware.checkAccessToken,
-  // commonMiddleware.validateBody(PostValidator.create),
   commentController.create,
 );
 

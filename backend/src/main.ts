@@ -6,6 +6,7 @@ import { config } from "./configs/config";
 import { ApiError } from "./errors/api.error";
 import { authRouter } from "./routes/auth.router";
 import { commentRouter } from "./routes/comment.router";
+import { managerRouter } from "./routes/manager.router";
 import { userRouter } from "./routes/user.router";
 
 const app = express();
@@ -22,6 +23,8 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
 app.use("/comment", commentRouter);
+
+app.use("/managers", managerRouter);
 
 app.use("*", (req, res, next) => {
   next(new ApiError("Route not found", 404));

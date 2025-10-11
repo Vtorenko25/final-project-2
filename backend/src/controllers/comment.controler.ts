@@ -14,14 +14,13 @@ class CommentController {
 
   public async getCommentById(req: Request, res: Response, next: NextFunction) {
     try {
-      const crmId = req.params.crmId; // переконатися, що роут має :crmId
+      const crmId = req.params.crmId;
       const result = await commentService.getCommentByCrmId(crmId);
       res.status(200).json(result);
     } catch (e) {
       next(e);
     }
   }
-
 
   public async create(req: Request, res: Response, next: NextFunction) {
     try {

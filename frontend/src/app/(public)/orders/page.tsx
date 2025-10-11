@@ -1,12 +1,12 @@
 import React from 'react';
 import PaginationComponent from "@/app/components/pagination/PaginationComponent";
 import UsersComponent from "@/app/components/users/UsersComponent";
-import LogoComponent from "@/app/components/logo/LogoComponent";
+import AdminHeaderComponent from "@/app/components/admin-header/AdminHeaderComponent";
 
 const UsersPage = () => {
     return (
         <div>
-            <LogoComponent/>
+            <AdminHeaderComponent/>
             <UsersComponent/>
             <PaginationComponent/>
         </div>
