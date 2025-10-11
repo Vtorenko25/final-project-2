@@ -1,18 +1,46 @@
 import { urlBuilder } from "@/app/services/api.service";
-import { IUserUpdateDto } from "@/app/models/IUser";
+import {IUser, IUserUpdateDto} from "@/app/models/IUser";
 
 export const userService = {
-    getAllUsers: async (page: number) => {
+    getAllUsers: async (page: number):Promise<IUser[]> => {
         try {
             const tokensPair = localStorage.getItem('tokens');
             if (!tokensPair) throw new Error("No tokens found in localStorage");
 
-            // Витягуємо accessToken із вкладеного об'єкта
             const stored = JSON.parse(tokensPair);
             const accessToken = stored.tokens?.accessToken;
             if (!accessToken) throw new Error("Access token not found");
 
             const response = await fetch(urlBuilder.getAllUsers(page), {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to fetch users');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            throw error;
+        }
+    },
+
+    getUsersStatistic: async () => {
+        try {
+            const tokensPair = localStorage.getItem('tokens');
+            if (!tokensPair) throw new Error("No tokens found in localStorage");
+
+            const stored = JSON.parse(tokensPair);
+            const accessToken = stored.tokens?.accessToken;
+            if (!accessToken) throw new Error("Access token not found");
+
+            const response = await fetch(urlBuilder.getUsersStatistic(), {
                 method: 'GET',
                 headers: {
                     accept: 'application/json',

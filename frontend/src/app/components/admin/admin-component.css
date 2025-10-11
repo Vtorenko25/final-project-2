@@ -1,85 +1,115 @@
-.admin-component {
-    padding-top: 5vh;
-    padding-left: 15vw;
-    display: flex;
 
+.admin-component {
+    padding: 5vh 15vw;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
 }
+
 .button-create {
-    background-color: green;
-    color: white;
+    background-color: #28a745;
+    color: #fff;
     border: none;
     padding: 10px 20px;
-    margin-right: 250px;
+    margin-right: 25vw;
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    width: fit-content;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .button-create:hover {
-    background-color: #186318;
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
-/* --- Стилізація форми --- */
 .form-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .manager-form {
-    background: white;
-    padding: 30px;
+    background: #fff;
+    padding: 30px 25px;
     border-radius: 12px;
-    width: 350px;
+    width: 360px;
+    max-width: 90%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    gap: 15px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 }
 
-.manager-form h3 {
-    text-align: center;
-    margin-bottom: 10px;
+.manager-form:hover {
+    transform: translateY(-2px);
+}
+
+.manager-form label {
+    font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .manager-form input {
-    padding: 8px;
+    padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.manager-form input:focus {
+    border-color: #28a745;
 }
 
 .buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 button.cancel {
-    background: gray;
-    color: white;
-}
-
-button.create {
-    background: green;
-    color: white;
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button.cancel:hover {
-    background: #555;
+    background: #5a6268;
+}
+
+button.create {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button.create:hover {
-    background: #007a00;
+    background: #218838;
 }
 
-
-
+.stats-block ul {
+    list-style: none;
+}
 

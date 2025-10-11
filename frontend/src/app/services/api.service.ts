@@ -2,6 +2,7 @@ import {base} from "@/app/constans/urls";
 
 export const urlBuilder = {
     getAllUsers: (page: number) => `${base}/users?page=${page}`,
+    getUsersStatistic: () => `${base}/users/statistic`,
     authUser: () => `${base}/auth/sign-in`,
     createComment:()=> `${base}/comment/create`,
     getCommentsByUser: (crmId:string) => `${base}/comment/${crmId}`,
