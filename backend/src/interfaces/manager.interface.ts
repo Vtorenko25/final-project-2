@@ -4,6 +4,7 @@ export interface IManager {
   name: string;
   surname: string;
   is_active: boolean;
+  last_login?: string;
 }
 
 export interface IManagerListQuery {
@@ -19,5 +20,5 @@ export interface IManagerListResponse {
 
 export type IManagerResponse = Pick<
   IManager,
-  "name" | "surname" | "email" | "is_active"
+  "name" | "surname" | "email" | "is_active" | "last_login"
 >;

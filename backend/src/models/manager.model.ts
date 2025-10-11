@@ -13,6 +13,7 @@ const managerSchema = new Schema<IManager>(
     is_active: { type: Boolean, default: true },
     name: { type: String, required: true },
     surname: { type: String, required: true },
+    last_login: { type: String, required: false, default: null },
   },
   { timestamps: true, versionKey: false },
 );

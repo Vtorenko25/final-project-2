@@ -29,31 +29,26 @@ export const managerService = {
         }
     },
 
-    getAllManagers: async (page: number) => {
-        try {
-            const tokensPair = localStorage.getItem('tokens');
-            if (!tokensPair) throw new Error("No tokens found in localStorage");
+    getAllManagers: async (page: number): Promise<{ data: IManager[], total: number, page: number, limit: number }> => {
+        const tokensPair = localStorage.getItem('tokens');
+        if (!tokensPair) throw new Error("No tokens found in localStorage");
 
-            const { accessToken } = JSON.parse(tokensPair);
+        const { accessToken } = JSON.parse(tokensPair);
 
-            const response = await fetch(urlBuilder.getAllManagers(page), {
-                method: 'GET',
-                headers: {
-                    accept: 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
+        const response = await fetch(urlBuilder.getAllManagers(page), {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Failed to fetch users');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error("Error fetching users:", error);
-            throw error;
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to fetch managers');
         }
+
+        return await response.json();
     },
 
 

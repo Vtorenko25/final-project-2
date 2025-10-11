@@ -12,6 +12,7 @@ class ManagerPresenter {
       surname: entity.surname,
       email: entity.email,
       is_active: entity.is_active ?? true,
+      last_login: entity.last_login,
     };
   }
 

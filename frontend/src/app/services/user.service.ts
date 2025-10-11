@@ -2,7 +2,7 @@ import { urlBuilder } from "@/app/services/api.service";
 import {IUser, IUserUpdateDto} from "@/app/models/IUser";
 
 export const userService = {
-    getAllUsers: async (page: number):Promise<IUser[]> => {
+    getAllUsers: async (page: number):Promise<{ data: IUser[]; total: number }> => {
         try {
             const tokensPair = localStorage.getItem('tokens');
             if (!tokensPair) throw new Error("No tokens found in localStorage");

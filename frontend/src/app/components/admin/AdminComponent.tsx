@@ -6,12 +6,14 @@ import { managerService } from "@/app/services/manager.service";
 import { userService } from "@/app/services/user.service";
 import {IFormData} from "@/app/models/IFormData";
 import {IStatistic} from "@/app/models/IStatistic";
+import {IManager} from "@/app/models/IManager";
 
 
 export default function AdminComponent() {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState<IFormData>({ email: '', name: '', surname: '' });
     const [stats, setStats] = useState<IStatistic>({ total: 0, agree: 0, inWork: 0, disagree: 0, dubbing: 0, new: 0 });
+    const [managers, setManagers] = useState<IManager[]>([])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -22,7 +24,15 @@ export default function AdminComponent() {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await managerService.createManager(formData);
+            const managerDto: IManager = {
+                email: formData.email,
+                name: formData.name,
+                surname: formData.surname,
+                is_active: formData.is_active ?? "true",
+                last_login: formData.last_login ?? "",
+            };
+
+            await managerService.createManager(managerDto);
             setFormData({ email: '', name: '', surname: '' });
             setShowForm(false);
         } catch (error: any) {
@@ -47,14 +57,26 @@ export default function AdminComponent() {
         }
     };
 
+    const fetchManager = async (page: number) => {
+        try {
+            const data = await managerService.getAllManagers(page);
+            setManagers(data.data ?? []);
+        } catch (err) {
+            console.error('Помилка при завантаженні менеджерів:', err);
+        }
+    };
+
     useEffect(() => {
         fetchStats();
     }, []);
+    useEffect(() => {
+        fetchManager(1);
+    }, []);
 
     return (
-        <div className="admin-component">
+        <div>
+            <div className="admin-component">
             <button className="button-create" onClick={() => setShowForm(true)}>CREATE</button>
-
             {showForm && (
                 <div className="form-overlay">
                     <form className="manager-form" onSubmit={handleCreate}>
@@ -107,6 +129,27 @@ export default function AdminComponent() {
                     <li><strong>New:</strong> {stats.new}</li>
                 </ul>
             </div>
+            </div>
+            <div className="managers-block">
+                <h3>Managers</h3>
+                {managers.length > 0 ? (
+                    <ul>
+                        {managers.map((manager, index) => (
+                            <li key={index} className="manager-item">
+                                <strong>Name:</strong> {manager.name} <br/>
+                                <strong>Surname:</strong> {manager.surname} <br/>
+                                <strong>Email:</strong> {manager.email} <br/>
+                                <strong>Active:</strong> {manager.is_active ? "Yes" : "No"} <br/>
+                                <strong>Last
+                                    login:</strong> {manager.last_login ? new Date(manager.last_login).toLocaleString() : "Never"}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No managers found</p>
+                )}
+            </div>
+
         </div>
     );
 }
