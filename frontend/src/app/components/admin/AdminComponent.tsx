@@ -76,79 +76,90 @@ export default function AdminComponent() {
     return (
         <div>
             <div className="admin-component">
-            <button className="button-create" onClick={() => setShowForm(true)}>CREATE</button>
-            {showForm && (
-                <div className="form-overlay">
-                    <form className="manager-form" onSubmit={handleCreate}>
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
+                <button className="button-create" onClick={() => setShowForm(true)}>CREATE</button>
+                {showForm && (
+                    <div className="form-overlay">
+                        <form className="manager-form" onSubmit={handleCreate}>
+                            <label>Email:</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
 
-                        <label>Name:</label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
 
-                        <label>Surname:</label>
-                        <input
-                            type="text"
-                            name="surname"
-                            placeholder="Surname"
-                            value={formData.surname}
-                            onChange={handleChange}
-                            required
-                        />
+                            <label>Surname:</label>
+                            <input
+                                type="text"
+                                name="surname"
+                                placeholder="Surname"
+                                value={formData.surname}
+                                onChange={handleChange}
+                                required
+                            />
 
-                        <div className="buttons">
-                            <button type="button" className="cancel" onClick={handleCancel}>CANCEL</button>
-                            <button type="submit" className="create">CREATE</button>
-                        </div>
-                    </form>
+                            <div className="buttons">
+                                <button type="button" className="cancel" onClick={handleCancel}>CANCEL</button>
+                                <button type="submit" className="create">CREATE</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
+                <div className="stats-block">
+                    <h3>Orders statistic</h3>
+                    <ul>
+                        <li><strong>Total:</strong> {stats.total}</li>
+                        <li><strong>Agree:</strong> {stats.agree}</li>
+                        <li><strong>In work:</strong> {stats.inWork}</li>
+                        <li><strong>Disagree:</strong> {stats.disagree}</li>
+                        <li><strong>Dubbing:</strong> {stats.dubbing}</li>
+                        <li><strong>New:</strong> {stats.new}</li>
+                    </ul>
                 </div>
-            )}
-
-            <div className="stats-block">
-                <h3>Orders statistic</h3>
-                <ul>
-                    <li><strong>Total:</strong> {stats.total}</li>
-                    <li><strong>Agree:</strong> {stats.agree}</li>
-                    <li><strong>In work:</strong> {stats.inWork}</li>
-                    <li><strong>Disagree:</strong> {stats.disagree}</li>
-                    <li><strong>Dubbing:</strong> {stats.dubbing}</li>
-                    <li><strong>New:</strong> {stats.new}</li>
-                </ul>
-            </div>
             </div>
             <div className="managers-block">
-                <h3>Managers</h3>
                 {managers.length > 0 ? (
-                    <ul>
+                    <div className="managers-block-list">
                         {managers.map((manager, index) => (
-                            <li key={index} className="manager-item">
-                                <strong>Name:</strong> {manager.name} <br/>
-                                <strong>Surname:</strong> {manager.surname} <br/>
-                                <strong>Email:</strong> {manager.email} <br/>
-                                <strong>Active:</strong> {manager.is_active ? "Yes" : "No"} <br/>
-                                <strong>Last
-                                    login:</strong> {manager.last_login ? new Date(manager.last_login).toLocaleString() : "Never"}
-                            </li>
+                            <div key={index} className="manager-item">
+                                <div><strong>Name:</strong> {manager.name}</div>
+                                <div><strong>Surname:</strong> {manager.surname}</div>
+                                <div><strong>Email:</strong> {manager.email}</div>
+                                <div><strong>Active:</strong> {manager.is_active ? "Yes" : "No"}</div>
+                                <div>
+                                    <strong>Last login:</strong>{" "}
+                                    {manager.last_login
+                                        ? new Date(manager.last_login).toLocaleString()
+                                        : "Never"}
+                                </div>
+                                <div><strong>Total:</strong> 0</div>
+
+                                <div className="manager-buttons">
+                                    <button className="activate-btn">ACTIVATE</button>
+                                    <button className="ban-btn">BAN</button>
+                                    <button className="unban-btn">UNBAN</button>
+                                </div>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 ) : (
                     <p>No managers found</p>
                 )}
             </div>
+
 
         </div>
     );

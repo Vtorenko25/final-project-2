@@ -41,6 +41,8 @@
     z-index: 1000;
 }
 
+
+
 .manager-form {
     background: #fff;
     padding: 30px 25px;
@@ -112,4 +114,93 @@ button.create:hover {
 .stats-block ul {
     list-style: none;
 }
+
+/************************************Manager***********************************************/
+
+.managers-block {
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+}
+
+.managers-block-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.manager-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    width: 30%;
+    min-width: 280px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.manager-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.manager-item div {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #333;
+}
+
+.manager-item strong {
+    color: #111;
+}
+
+.manager-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-start;
+}
+
+.manager-buttons button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.activate-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.activate-btn:hover {
+    background-color: #218838;
+}
+
+.ban-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.ban-btn:hover {
+    background-color: #c82333;
+}
+
+.unban-btn {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.unban-btn:hover {
+    background-color: #e0a800;
+}
+
 
