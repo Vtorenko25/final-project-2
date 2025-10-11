@@ -9,4 +9,15 @@ export interface IManager {
 export interface IManagerListQuery {
   limit?: number;
   page?: number;
+  search?: string;
 }
+
+export interface IManagerListResponse {
+  data: IManagerResponse[];
+  total: number;
+}
+
+export type IManagerResponse = Pick<
+  IManager,
+  "name" | "surname" | "email" | "is_active"
+>;

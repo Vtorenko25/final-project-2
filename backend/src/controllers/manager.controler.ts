@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { IManagerListQuery } from "../interfaces/manager.interface";
 import { managerService } from "../services/manager.service";
 
 class ManagerController {
@@ -15,7 +16,8 @@ class ManagerController {
 
   public async getManager(req: Request, res: Response, next: NextFunction) {
     try {
-      const manager = await managerService.getManager();
+      const query = req.query as unknown as IManagerListQuery;
+      const manager = await managerService.getManager(query);
       res.status(200).json(manager);
     } catch (e) {
       next(e);

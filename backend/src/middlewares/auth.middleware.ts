@@ -15,7 +15,8 @@ class AuthMiddleware {
       if (!header) {
         throw new ApiError("No token provided", 401);
       }
-      const accessToken = header.split("Bearer ")[1];
+      // const accessToken = header.split("Bearer ")[1];
+      const accessToken = header.replace(/Bearer\s+/i, "").trim();
       if (!accessToken) {
         throw new ApiError("No token provided", 401);
       }

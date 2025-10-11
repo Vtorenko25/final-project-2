@@ -9,14 +9,16 @@ const router = Router();
 
 router.get(
   "/",
+  authMiddleware.checkAccessToken,
   commonMiddleware.isQueryValid(UserValidator.listQuery),
   userController.getAllUsers,
 );
 
+router.get("/statistic", userController.getAllUsersStatistic);
+
 router.put(
   "/:id",
   authMiddleware.checkAccessToken,
-  // commonMiddleware.validateBody(UserValidator.update),
   userController.updateUserById,
 );
 

@@ -32,6 +32,15 @@ export interface IUserListQuery {
   orderBy?: UserListOrderEnum;
 }
 
+export interface IUserListStatistic {
+  total: number;
+  Agree: number;
+  In_Work: number;
+  Disagree: number;
+  Dubbing: number;
+  New: number;
+}
+
 export type IUserResponse = Pick<
   IUser,
   | "id"

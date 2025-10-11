@@ -7,7 +7,10 @@ export const commentService = {
             const tokensPair = localStorage.getItem('tokens');
             if (!tokensPair) throw new Error("No tokens found in localStorage");
 
-            const { accessToken } = JSON.parse(tokensPair);
+            const stored = JSON.parse(tokensPair);
+            const accessToken = stored.tokens?.accessToken;
+            if (!accessToken) throw new Error("Access token not found");
+
             const response = await fetch(urlBuilder.createComment(), {
                 method: 'POST',
                 headers: {
@@ -34,7 +37,9 @@ export const commentService = {
             const tokensPair = localStorage.getItem("tokens");
             if (!tokensPair) throw new Error("No tokens found in localStorage");
 
-            const { accessToken } = JSON.parse(tokensPair);
+            const stored = JSON.parse(tokensPair);
+            const accessToken = stored.tokens?.accessToken;
+            if (!accessToken) throw new Error("Access token not found");
 
             const response = await fetch(urlBuilder.getCommentsByUser(crmId), {
                 headers: {
@@ -47,14 +52,10 @@ export const commentService = {
                 throw new Error(error.message || "Failed to fetch comments");
             }
 
-            const comments: IComment[] = await response.json();
-            return comments;
+            return await response.json();
         } catch (error) {
             console.error("Error fetching comments:", error);
             throw error;
         }
     },
-
 };
-
-
