@@ -126,20 +126,21 @@ button.create:hover {
 
 .managers-block-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .manager-item {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: start;
+    justify-content: start;
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
+    border: 1px solid green;
     border-radius: 12px;
     padding: 20px;
-    width: 30%;
+    width: 80vw;
     min-width: 280px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -164,6 +165,7 @@ button.create:hover {
     display: flex;
     gap: 10px;
     margin-top: 10px;
+    margin-left: 150px;
     justify-content: flex-start;
 }
 
@@ -176,31 +178,16 @@ button.create:hover {
     transition: background-color 0.2s ease;
 }
 
-.activate-btn {
+.activate-btn, .ban-btn, .unban-btn {
     background-color: #28a745;
     color: white;
 }
 
-.activate-btn:hover {
+.activate-btn:hover, .ban-btn:hover, .unban-btn:hover {
     background-color: #218838;
 }
-
-.ban-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-.ban-btn:hover {
-    background-color: #c82333;
-}
-
-.unban-btn {
-    background-color: #ffc107;
-    color: #212529;
-}
-
-.unban-btn:hover {
-    background-color: #e0a800;
+.total {
+    margin-left: 80px;
 }
 
 

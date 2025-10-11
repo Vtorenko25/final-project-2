@@ -135,6 +135,7 @@ export default function AdminComponent() {
                     <div className="managers-block-list">
                         {managers.map((manager, index) => (
                             <div key={index} className="manager-item">
+                                <div>
                                 <div><strong>Name:</strong> {manager.name}</div>
                                 <div><strong>Surname:</strong> {manager.surname}</div>
                                 <div><strong>Email:</strong> {manager.email}</div>
@@ -145,7 +146,8 @@ export default function AdminComponent() {
                                         ? new Date(manager.last_login).toLocaleString()
                                         : "Never"}
                                 </div>
-                                <div><strong>Total:</strong> 0</div>
+                                </div>
+                                <div className="total"><strong>Total:</strong> 0</div>
 
                                 <div className="manager-buttons">
                                     <button className="activate-btn">ACTIVATE</button>
