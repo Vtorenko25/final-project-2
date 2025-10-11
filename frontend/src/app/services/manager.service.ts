@@ -1,8 +1,8 @@
 import { urlBuilder } from "@/app/services/api.service";
-import {IManager} from "@/app/models/IManager";
+import {IManager, IManagerCreate} from "@/app/models/IManager";
 
 export const managerService = {
-    createManager: async (dto: IManager) => {
+    createManager: async (dto: IManagerCreate): Promise<IManager> => {
         try {
             const tokensPair = localStorage.getItem('tokens');
             if (!tokensPair) throw new Error("No tokens found in localStorage");

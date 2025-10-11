@@ -1,9 +1,11 @@
 import { model, Schema } from "mongoose";
 
 import { IManager } from "../interfaces/manager.interface";
+import { Counter } from "./counter.model";
 
 const managerSchema = new Schema<IManager>(
   {
+    manager_id: { type: Number, unique: true },
     email: {
       type: String,
       required: true,
@@ -17,5 +19,17 @@ const managerSchema = new Schema<IManager>(
   },
   { timestamps: true, versionKey: false },
 );
+
+managerSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "managerId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+    );
+    this.manager_id = counter.seq;
+  }
+  next();
+});
 
 export const Managers = model<IManager>("Manager", managerSchema);

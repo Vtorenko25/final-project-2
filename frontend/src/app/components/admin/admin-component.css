@@ -119,7 +119,7 @@ button.create:hover {
 
 .managers-block {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     background-color: #f8f9fa;
     box-sizing: border-box;
 }
@@ -131,15 +131,18 @@ button.create:hover {
     flex-direction: column;
     gap: 10px;
 }
-
+.manager-info {
+    width: 15vw;
+}
 .manager-item {
     display: flex;
     align-items: start;
     justify-content: start;
+    gap: 50px;
     background-color: #ffffff;
     border: 1px solid green;
     border-radius: 12px;
-    padding: 20px;
+    padding: 10px;
     width: 80vw;
     min-width: 280px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);

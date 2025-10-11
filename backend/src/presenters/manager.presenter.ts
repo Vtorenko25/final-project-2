@@ -8,6 +8,7 @@ import {
 class ManagerPresenter {
   public toPublicResDto(entity: IManager): IManagerResponse {
     return {
+      manager_id: entity.manager_id,
       name: entity.name,
       surname: entity.surname,
       email: entity.email,
