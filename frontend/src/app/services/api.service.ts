@@ -4,6 +4,7 @@ export const urlBuilder = {
     getAllUsers: (page: number) => `${base}/users?page=${page}`,
     getUsersStatistic: () => `${base}/users/statistic`,
     authUser: () => `${base}/auth/sign-in`,
+    authManager: () => `${base}/auth/sign-in/manager`,
     createComment:()=> `${base}/comment/create`,
     getCommentsByUser: (crmId:string) => `${base}/comment/${crmId}`,
     updateUserById: (id: string) => `${base}/users/${id}`,

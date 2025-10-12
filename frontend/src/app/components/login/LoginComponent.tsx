@@ -12,7 +12,14 @@ export default function LoginComponent() {
 
     const handleLogin = async () => {
         try {
-            const tokens = await authService.signIn(email, password);
+            let tokens;
+
+            if (email === 'admin@gmail.com') {
+                tokens = await authService.signIn(email, password);
+            }
+            else {
+                tokens = await authService.signInManager(email, password);
+            }
             localStorage.setItem('tokens', JSON.stringify(tokens));
             router.push('/orders');
         } catch (error: any) {

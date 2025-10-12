@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 import { RoleEnum } from "../enums/role.enum";
 import { ApiError } from "../errors/api.error";
 import { ILogin, ILoginManager } from "../interfaces/login.interface";
@@ -40,11 +42,12 @@ class AuthService {
     const { email, password } = dto;
 
     const managerDoc = await managerService.getManagerByEmail(email);
+
     if (!managerDoc) {
       throw new ApiError("Невірний email або пароль", 401);
     }
     const manager = managerDoc;
-    if (manager.password !== password) {
+    if (!(await bcrypt.compare(password, manager.password))) {
       throw new ApiError("Невірний email або пароль", 401);
     }
 
