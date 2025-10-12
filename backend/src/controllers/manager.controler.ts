@@ -79,6 +79,7 @@ class ManagerController {
       next(e);
     }
   }
+
 }
 
 export const managerController = new ManagerController();

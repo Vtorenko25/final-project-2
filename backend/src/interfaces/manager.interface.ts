@@ -35,3 +35,8 @@ export interface IManagerPassword {
     role?: string;
   };
 }
+
+export interface IManagerPassword {
+  manager_id: number;
+  password: string;
+}

@@ -277,7 +277,7 @@ export default function AdminComponent() {
         try {
             const res = await managerService.generateActivationLinkManagers(id);
             const token = res.AccessToken;
-            const activationLink = `http://localhost:3000/activate?${token}`;
+            const activationLink = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
 
             await navigator.clipboard.writeText(activationLink);
 

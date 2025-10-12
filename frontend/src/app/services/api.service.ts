@@ -12,4 +12,5 @@ export const urlBuilder = {
     createManager:()=>`${base}/managers/create`,
     getAllManagers: (page:number) => `${base}/managers?page=${page}`,
     generateActivationLinkManagers: (id:number) => `${base}/managers/${id}`,
+    activateAccount: (id: number) => `${base}/managers/password/${id}`,
 };
