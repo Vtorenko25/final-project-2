@@ -4,8 +4,8 @@ import { ApiError } from "../errors/api.error";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
 
-class AuthMiddleware {
-  public async checkAccessToken(
+class AuthManagerMiddleware {
+  public async checkManagerAccessToken(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -19,7 +19,10 @@ class AuthMiddleware {
       if (!accessToken) {
         throw new ApiError("No token provided", 401);
       }
-      const tokenPayload = tokenService.verifyToken(accessToken, "access");
+      const tokenPayload = tokenService.verifyTokenManager(
+        accessToken,
+        "access",
+      );
 
       const pair = await tokenRepository.findByParams({ accessToken });
       if (!pair) {
@@ -33,4 +36,4 @@ class AuthMiddleware {
   }
 }
 
-export const authMiddleware = new AuthMiddleware();
+export const authManagerMiddleware = new AuthManagerMiddleware();

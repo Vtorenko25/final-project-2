@@ -28,7 +28,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/joi": "^17.2.2",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^8.29.0",

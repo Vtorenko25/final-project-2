@@ -18,7 +18,7 @@ router.get("/statistic", userController.getAllUsersStatistic);
 
 router.put(
   "/:id",
-  authMiddleware.checkAccessToken,
+  // authMiddleware.checkAccessToken,
   userController.updateUserById,
 );
 

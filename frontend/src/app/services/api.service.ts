@@ -11,4 +11,5 @@ export const urlBuilder = {
     createGroup: () => `/groups`,
     createManager:()=>`${base}/managers/create`,
     getAllManagers: (page:number) => `${base}/managers?page=${page}`,
+    generateActivationLinkManagers: (id:number) => `${base}/managers/${id}`,
 };

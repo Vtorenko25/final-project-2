@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { managerController } from "../controllers/manager.controler";
 import { commonMiddleware } from "../middlewares/common.middleware";
+import { authManagerMiddleware } from "../middlewares/manager.middleware";
 import { ManagerValidator } from "../validators/manager.validator";
 
 const router = Router();
@@ -16,5 +17,11 @@ router.get(
 
 // @ts-ignore
 router.post("/:id", managerController.generateActivationLink);
+
+router.post(
+  "/password/:id",
+  authManagerMiddleware.checkManagerAccessToken,
+  managerController.createPassword,
+);
 
 export const managerRouter = router;

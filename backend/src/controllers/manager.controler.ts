@@ -62,9 +62,19 @@ class ManagerController {
 
       res.status(200).json({
         message: "Activation link generated successfully",
-        activationLink: `AccessToken=${generatedTokens.accessToken}`,
+        AccessToken: `${generatedTokens.accessToken}`,
         expiresIn: "30m",
       });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async createPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = req.body;
+      const mewPassword = await managerService.createPassword(dto);
+      res.status(201).json(mewPassword);
     } catch (e) {
       next(e);
     }

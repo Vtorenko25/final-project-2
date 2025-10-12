@@ -41,7 +41,28 @@ class TokenService {
 
     return { accessToken, refreshToken };
   }
+  public verifyTokenManager(
+    token: string,
+    type: "access" | "refresh",
+  ): ITokenPayloadManager {
+    try {
+      let secret: string;
+      switch (type) {
+        case "access":
+          secret = config.jwtManagerAccessSecret;
+          break;
+        case "refresh":
+          secret = config.jwtManagerRefreshSecret;
+          break;
+        default:
+          throw new ApiError("Invalid token type", 401);
+      }
 
+      return jwt.verify(token, secret) as ITokenPayloadManager;
+    } catch (error) {
+      throw new ApiError("Invalid token", 401);
+    }
+  }
   public verifyToken(token: string, type: "access" | "refresh"): ITokenPayload {
     try {
       let secret: string;

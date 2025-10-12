@@ -16,6 +16,7 @@ const managerSchema = new Schema<IManager>(
     name: { type: String, required: true },
     surname: { type: String, required: true },
     last_login: { type: String, required: false, default: null },
+    password: { type: String, required: false, default: null },
   },
   { timestamps: true, versionKey: false },
 );
