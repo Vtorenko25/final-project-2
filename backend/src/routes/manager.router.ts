@@ -14,4 +14,7 @@ router.get(
   managerController.getManager,
 );
 
+// @ts-ignore
+router.post("/:id", managerController.generateActivationLink);
+
 export const managerRouter = router;

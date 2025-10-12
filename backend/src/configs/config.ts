@@ -12,4 +12,8 @@ export const config = {
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+  jwtManagerAccessSecret: process.env.JWT_MANAGER_ACCESS_SECRET,
+  jwtManagerAccessExpiresIn: process.env.JWT_MANAGER_ACCESS_EXPIRES_IN,
+  jwtManagerRefreshSecret: process.env.JWT_MANAGER_REFRESH_SECRET,
+  jwtManagerRefreshExpiresIn: process.env.JWT_MANAGER_REFRESH_EXPIRES_IN,
 };

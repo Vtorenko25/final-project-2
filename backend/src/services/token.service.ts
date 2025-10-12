@@ -2,7 +2,12 @@ import jwt, { Secret, SignOptions } from "jsonwebtoken";
 
 import { config } from "../configs/config";
 import { ApiError } from "../errors/api.error";
-import { ITokenPair, ITokenPayload } from "../interfaces/token.interface";
+import {
+  ITokenPair,
+  ITokenPairManager,
+  ITokenPayload,
+  ITokenPayloadManager,
+} from "../interfaces/token.interface";
 
 class TokenService {
   public genereteTokens(payload: ITokenPayload): ITokenPair {
@@ -14,6 +19,29 @@ class TokenService {
     });
     return { accessToken, refreshToken };
   }
+
+  public generateTokensManager(
+    payload: ITokenPayloadManager,
+  ): ITokenPairManager {
+    const accessToken = jwt.sign(
+      payload,
+      config.jwtManagerAccessSecret as Secret,
+      {
+        expiresIn: config.jwtManagerAccessExpiresIn as SignOptions["expiresIn"],
+      },
+    );
+    const refreshToken = jwt.sign(
+      payload,
+      config.jwtManagerRefreshSecret as Secret,
+      {
+        expiresIn:
+          config.jwtManagerRefreshExpiresIn as SignOptions["expiresIn"],
+      },
+    );
+
+    return { accessToken, refreshToken };
+  }
+
   public verifyToken(token: string, type: "access" | "refresh"): ITokenPayload {
     try {
       let secret: string;

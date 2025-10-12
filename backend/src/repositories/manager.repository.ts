@@ -23,6 +23,9 @@ class ManagerRepository {
 
     return [managers, total];
   }
-}
 
+  public async findById(manager_id: number): Promise<IManager | null> {
+    return await Managers.findOne({ manager_id });
+  }
+}
 export const managerRepository = new ManagerRepository();

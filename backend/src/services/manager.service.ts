@@ -17,6 +17,10 @@ class ManagerService {
     const [entities, total] = await managerRepository.getManager(query);
     return managerPresenter.toListResDto(entities, total, query);
   }
+
+  public async getManagerById(manager_id: number): Promise<IManager | null> {
+    return await managerRepository.findById(manager_id);
+  }
 }
 
 export const managerService = new ManagerService();
