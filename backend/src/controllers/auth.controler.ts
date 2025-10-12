@@ -12,6 +12,15 @@ class AuthControler {
       next(e);
     }
   }
+  public async signInManager(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = req.body;
+      const result = await authService.signInManager(dto);
+      res.status(201).json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthControler();

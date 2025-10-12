@@ -7,6 +7,7 @@ import { managerPresenter } from "../presenters/manager.presenter";
 import { managerRepository } from "../repositories/manager.repository";
 import { passwordService } from "./password.service";
 
+
 class ManagerService {
   public async createManager(dto: IManager): Promise<IManager> {
     return await managerRepository.create(dto);
@@ -31,11 +32,14 @@ class ManagerService {
 
     const hashedPassword = await passwordService.hashPassword(dto.password);
 
-    // 🔹 Оновлюємо існуючого менеджера
     return await managerRepository.updatePassword(
       manager.manager_id,
       hashedPassword,
     );
+  }
+
+  public async getManagerByEmail(email: string) {
+    return await managerRepository.findByEmail(email);
   }
 }
 
