@@ -37,4 +37,5 @@ export interface ITokenPayloadManager {
   _id: string;
   email: string;
   manager_id: number;
+  role: string;
 }

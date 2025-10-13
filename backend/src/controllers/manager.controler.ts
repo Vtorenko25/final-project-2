@@ -48,6 +48,7 @@ class ManagerController {
         _id: manager.manager_id.toString(),
         manager_id: manager.manager_id,
         email: manager.email.toString(),
+        role: "manager",
       };
 
       const generatedTokens =
@@ -59,7 +60,6 @@ class ManagerController {
         userId: manager.manager_id,
         manager_id: manager.manager_id,
       });
-
       res.status(200).json({
         message: "Activation link generated successfully",
         AccessToken: `${generatedTokens.accessToken}`,
@@ -79,7 +79,6 @@ class ManagerController {
       next(e);
     }
   }
-
 }
 
 export const managerController = new ManagerController();

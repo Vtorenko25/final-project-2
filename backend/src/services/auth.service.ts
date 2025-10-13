@@ -58,7 +58,11 @@ class AuthService {
     };
 
     const generatedTokens = await tokenService.genereteTokens(tokenPayload);
-    await tokenRepository.create({ ...generatedTokens, email: manager.email });
+    await tokenRepository.create({
+      ...generatedTokens,
+      email: manager.email,
+      role: RoleEnum,
+    });
 
     return { tokens: generatedTokens, email: manager.email };
   }
