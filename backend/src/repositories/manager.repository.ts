@@ -43,10 +43,27 @@ class ManagerRepository {
       throw new Error("Manager not found");
     }
     return updated;
-  };
+  }
 
   public async findByEmail(email: string) {
     return await Managers.findOne({ email }).exec();
+  }
+
+  public async updateStatus(
+    manager_id: number,
+    is_active: boolean,
+  ): Promise<IManager> {
+    const manager = await Managers.findOneAndUpdate(
+      { manager_id },
+      { is_active },
+      { new: true },
+    );
+
+    if (!manager) {
+      throw new Error("Manager not found");
+    }
+
+    return manager;
   }
 }
 export const managerRepository = new ManagerRepository();

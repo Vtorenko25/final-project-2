@@ -7,7 +7,6 @@ import { managerPresenter } from "../presenters/manager.presenter";
 import { managerRepository } from "../repositories/manager.repository";
 import { passwordService } from "./password.service";
 
-
 class ManagerService {
   public async createManager(dto: IManager): Promise<IManager> {
     return await managerRepository.create(dto);
@@ -40,6 +39,14 @@ class ManagerService {
 
   public async getManagerByEmail(email: string) {
     return await managerRepository.findByEmail(email);
+  }
+
+  public async banManager(id: string | number): Promise<IManager> {
+    return await managerRepository.updateStatus(Number(id), false);
+  }
+
+  public async unbanManager(id: string | number): Promise<IManager> {
+    return await managerRepository.updateStatus(Number(id), true);
   }
 }
 

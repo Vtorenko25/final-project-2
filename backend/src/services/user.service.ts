@@ -60,9 +60,9 @@ class UserService {
     const user = await userRepository.getById(userId);
     if (!user) throw new ApiError("User not found", 404);
 
-    if (tokenPayload.role !== "admin" && tokenPayload.userId !== userId) {
-      throw new ApiError("Forbidden: you can't edit this user", 403);
-    }
+    // if (tokenPayload.role !== "admin" && tokenPayload.userId !== userId) {
+    //   throw new ApiError("Forbidden: you can't edit this user", 403);
+    // }
 
     return await userRepository.updateById(userId, dto);
   }

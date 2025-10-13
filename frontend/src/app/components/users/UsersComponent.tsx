@@ -102,7 +102,7 @@ export default function UsersComponent() {
             });
 
             if (myOnly) {
-                fetchedUsers = fetchedUsers.filter(u => u.manager === 'admin');
+                fetchedUsers = fetchedUsers.filter(u => u.manager === getUserRole());
             }
 
             setUsers(sortData(fetchedUsers, sortColumn, sortOrder));
@@ -155,7 +155,6 @@ export default function UsersComponent() {
                 createdAt: new Date().toISOString(),
                 title: "",
             };
-
             const savedComment = await commentService.createComment(dto);
 
             setComments(prev => ({

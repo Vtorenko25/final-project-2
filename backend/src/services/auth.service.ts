@@ -50,11 +50,14 @@ class AuthService {
     if (!(await bcrypt.compare(password, manager.password))) {
       throw new ApiError("Невірний email або пароль", 401);
     }
-
+    if (!manager.is_active) {
+      throw new ApiError("Your account is banned", 401);
+    }
     const tokenPayload = {
       email: manager.email,
       userId: managerDoc._id.toString(),
       role: RoleEnum.MANAGER,
+      is_active: manager.is_active,
     };
 
     const generatedTokens = await tokenService.genereteTokens(tokenPayload);
@@ -64,7 +67,10 @@ class AuthService {
       role: RoleEnum,
     });
 
-    return { tokens: generatedTokens, email: manager.email };
+    return {
+      tokens: generatedTokens,
+      email: manager.email,
+    };
   }
 }
 

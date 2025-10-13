@@ -18,6 +18,9 @@ router.get(
 // @ts-ignore
 router.post("/:id", managerController.generateActivationLink);
 
+router.patch("/ban/:id", managerController.banManager);
+router.patch("/unban/:id", managerController.unbanManager);
+
 router.post(
   "/password/:id",
   authManagerMiddleware.checkManagerAccessToken,

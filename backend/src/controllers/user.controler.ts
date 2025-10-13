@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ApiError } from "../errors/api.error";
 import { ITokenPayload } from "../interfaces/token.interface";
 import { IUserListQuery, IUserUpdateDto } from "../interfaces/user.interface";
 import { userService } from "../services/user.service";
@@ -30,7 +31,8 @@ class UserController {
 
   public async updateUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const tokenPayload = req.res.locals.tokenPayload as ITokenPayload;
+      const tokenPayload = res.locals.tokenPayload as ITokenPayload;
+
       const userId = req.params.id;
       const dto = req.body as IUserUpdateDto;
 
@@ -41,7 +43,12 @@ class UserController {
       );
       res.status(200).json(result);
     } catch (e) {
-      next(e);
+      console.error("❌ Помилка в updateUserById:", e);
+      next(
+        e instanceof ApiError
+          ? e
+          : new ApiError("Помилка оновлення користувача", 500),
+      );
     }
   }
 }

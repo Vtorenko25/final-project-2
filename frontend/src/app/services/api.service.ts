@@ -14,4 +14,6 @@ export const urlBuilder = {
     getAllManagers: (page:number) => `${base}/managers?page=${page}`,
     generateActivationLinkManagers: (id:number) => `${base}/managers/${id}`,
     activateAccount: (id: number) => `${base}/managers/password/${id}`,
+    banManager:(id:number) => `${base}/managers/ban/${id}`,
+    unbanManager:(id:number) => `${base}/managers/unban/${id}`,
 };

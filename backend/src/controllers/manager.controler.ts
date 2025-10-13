@@ -79,6 +79,32 @@ class ManagerController {
       next(e);
     }
   }
+  public async banManager(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params; // беремо id з params
+      const bannedManager = await managerService.banManager(id);
+      res.status(200).json({
+        message: `Manager ${id} has been banned`,
+        manager: bannedManager,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async unbanManager(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const unbannedManager = await managerService.unbanManager(id);
+      res.status(200).json({
+        message: `Manager ${id} has been unbanned`,
+        manager: unbannedManager,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+
 }
 
 export const managerController = new ManagerController();
