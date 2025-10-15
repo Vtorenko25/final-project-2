@@ -26,7 +26,7 @@ class AuthManagerMiddleware {
         accessToken,
         "access",
       );
-      console.log(tokenPayload);
+
       const pair = await tokenRepository.findByParams({ accessToken });
       if (!pair) {
         throw new ApiError("Invalid token", 401);

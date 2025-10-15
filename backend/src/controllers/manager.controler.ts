@@ -70,15 +70,6 @@ class ManagerController {
     }
   }
 
-  public async createPassword(req: Request, res: Response, next: NextFunction) {
-    try {
-      const dto = req.body;
-      const mewPassword = await managerService.createPassword(dto);
-      res.status(201).json(mewPassword);
-    } catch (e) {
-      next(e);
-    }
-  }
   public async banManager(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params; // беремо id з params
@@ -104,7 +95,6 @@ class ManagerController {
       next(e);
     }
   }
-
 }
 
 export const managerController = new ManagerController();

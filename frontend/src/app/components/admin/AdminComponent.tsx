@@ -105,6 +105,10 @@ export default function AdminComponent() {
         }
     };
 
+    const recoveryPassword = async (id:number)=>{
+        console.log(id);
+    }
+
     const handleBan = async (id: number) => {
         try {
             await managerService.banManager(id);
@@ -182,11 +186,15 @@ export default function AdminComponent() {
                                             onClick={() => handleActivate(manager.manager_id)}>ACTIVATE
                                     </button>
                                     <button className="activate-btn"
+                                            onClick={() => recoveryPassword(manager.manager_id)}>RECOVERY PASSWORD
+                                    </button>
+                                    <button className="activate-btn"
                                             onClick={() => handleBan(manager.manager_id)}>BAN
                                     </button>
                                     <button className="activate-btn"
                                             onClick={() => handleUnban(manager.manager_id)}>UNBAN
                                     </button>
+
                                 </div>
                             </div>
                         ))}

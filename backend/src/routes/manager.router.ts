@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import { managerController } from "../controllers/manager.controler";
+import { passwordController } from "../controllers/password.controler";
+import { authMiddleware } from "../middlewares/auth.middleware";
 import { commonMiddleware } from "../middlewares/common.middleware";
 import { authManagerMiddleware } from "../middlewares/manager.middleware";
 import { ManagerValidator } from "../validators/manager.validator";
@@ -24,7 +26,13 @@ router.patch("/unban/:id", managerController.unbanManager);
 router.post(
   "/password/:id",
   authManagerMiddleware.checkManagerAccessToken,
-  managerController.createPassword,
+  passwordController.createPassword,
+);
+
+router.patch(
+  "/password/:id",
+  authMiddleware.checkAccessToken,
+  passwordController.updatePassword,
 );
 
 export const managerRouter = router;

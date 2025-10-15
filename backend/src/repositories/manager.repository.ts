@@ -30,21 +30,6 @@ class ManagerRepository {
     }
     return await Managers.findOne({ manager_id: Number(manager_id) });
   }
-  public async updatePassword(
-    manager_id: number,
-    password: string,
-  ): Promise<IManager> {
-    const updated = await Managers.findOneAndUpdate(
-      { manager_id },
-      { password },
-      { new: true },
-    );
-    if (!updated) {
-      throw new Error("Manager not found");
-    }
-    return updated;
-  }
-
   public async findByEmail(email: string) {
     return await Managers.findOne({ email }).exec();
   }
