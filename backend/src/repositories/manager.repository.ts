@@ -2,6 +2,7 @@ import { FilterQuery } from "mongoose";
 
 import { IManager, IManagerListQuery } from "../interfaces/manager.interface";
 import { Managers } from "../models/manager.model";
+import { User } from "../models/user.model";
 
 class ManagerRepository {
   public async create(dto: IManager): Promise<IManager> {
@@ -54,7 +55,7 @@ class ManagerRepository {
   public async updateLastLogin(manager_id: number): Promise<IManager> {
     const manager = await Managers.findOneAndUpdate(
       { manager_id },
-      { last_login: new Date().toISOString() }, // зберігаємо у форматі ISO
+      { last_login: new Date().toISOString() },
       { new: true },
     );
 
@@ -63,6 +64,29 @@ class ManagerRepository {
     }
 
     return manager;
+  }
+  public async getManagerStatistic(
+    email: string,
+  ): Promise<Record<string, number>> {
+    // const manager = await Managers.findOne({ email }).exec();
+
+    // if (!manager) {
+    //   throw new Error("Manager not found");
+    // }
+
+    const filter = { manager: email };
+
+    const total = await User.countDocuments(filter);
+    const agree = await User.countDocuments({ ...filter, status: "Agree" });
+    const inWork = await User.countDocuments({ ...filter, status: "In Work" });
+    const disagree = await User.countDocuments({
+      ...filter,
+      status: "Disagree",
+    });
+    const dubbing = await User.countDocuments({ ...filter, status: "Dubbing" });
+    const newUsers = await User.countDocuments({ ...filter, status: "New" });
+
+    return { total, agree, inWork, disagree, dubbing, new: newUsers };
   }
 }
 export const managerRepository = new ManagerRepository();

@@ -14,7 +14,7 @@
     color: #fff;
     border: none;
     padding: 10px 20px;
-    margin-right: 25vw;
+    margin-right: 15vw;
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
@@ -40,8 +40,6 @@
     align-items: center;
     z-index: 1000;
 }
-
-
 
 .manager-form {
     background: #fff;
@@ -111,8 +109,23 @@ button.create:hover {
     background: #218838;
 }
 
-.stats-block ul {
-    list-style: none;
+.stats-block-div {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.stats-block-div span {
+    display: inline-block;
+}
+
+.stats-block-h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /************************************Manager***********************************************/
@@ -137,8 +150,8 @@ button.create:hover {
 .manager-item {
     display: flex;
     align-items: start;
-    justify-content: start;
-    gap: 50px;
+    justify-content: space-between;
+    gap: 10px;
     background-color: #ffffff;
     border: 1px solid green;
     border-radius: 12px;
@@ -163,14 +176,19 @@ button.create:hover {
 .manager-item strong {
     color: #111;
 }
+
+.stats-block-manager-stats li {
+    list-style: none;
+}
 /*******************************************BUTTONS***************************************/
 .manager-buttons {
     display: flex;
     gap: 10px;
     margin-top: 10px;
-    margin-left: 150px;
+    margin-left: 10px;
     justify-content: flex-start;
     position: relative;
+    margin-right: 360px;
 }
 
 .manager-buttons button {

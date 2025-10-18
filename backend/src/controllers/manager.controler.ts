@@ -95,7 +95,11 @@ class ManagerController {
       next(e);
     }
   }
-  public async updateLastLogin(req: Request, res: Response, next: NextFunction) {
+  public async updateLastLogin(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const manager_id = Number(req.params.id);
       if (isNaN(manager_id)) {
@@ -103,7 +107,23 @@ class ManagerController {
       }
 
       const updatedManager = await managerService.updateLastLogin(manager_id);
-      res.status(200).json({ message: "Last login updated", manager: updatedManager });
+      res
+        .status(200)
+        .json({ message: "Last login updated", manager: updatedManager });
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async getManagerStatistic(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { email } = req.params;
+
+      const stats = await managerService.getManagerStatistic(email);
+      res.json(stats);
     } catch (e) {
       next(e);
     }

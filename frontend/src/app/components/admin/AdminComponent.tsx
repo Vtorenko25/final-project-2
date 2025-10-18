@@ -22,6 +22,8 @@ export default function AdminComponent() {
     const [managers, setManagers] = useState<IManager[]>([]);
     const [buttonState, setButtonState] = useState<Record<number, "activate" | "recovery" | "copy">>({});
     const [copyMessage, setCopyMessage] = useState<Record<number, boolean>>({});
+    const [managerStats, setManagerStats] = useState<Record<string, IStatistic>>({});
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -82,9 +84,26 @@ export default function AdminComponent() {
                 initialState[m.manager_id] = m.is_active === "true" ? "recovery" : "activate";
             });
             setButtonState(initialState);
-
         } catch (err) {
             console.error('Помилка при завантаженні менеджерів:', err);
+        }
+    };
+
+    const fetchManagerStats = async (email: string) => {
+        try {
+            const data = await userService.getManagerStatistic(email);
+
+            if (data.total || data.agree || data.inWork || data.disagree || data.dubbing || data.new) {
+                setManagerStats(prev => ({ ...prev, [email]: data }));
+            } else {
+                setManagerStats(prev => {
+                    const copy = { ...prev };
+                    delete copy[email];
+                    return copy;
+                });
+            }
+        } catch (err) {
+            console.error(`Помилка при завантаженні статистики менеджера ${email}:`, err);
         }
     };
 
@@ -93,15 +112,19 @@ export default function AdminComponent() {
         fetchManager(1);
     }, []);
 
+
+    useEffect(() => {
+        managers.forEach(m => fetchManagerStats(m.email));
+    }, [managers]);
+
+
     const handleActivate = async (id: number) => {
         try {
             const res = await passwordService.createPassword(id);
             const token = res.AccessToken;
             const activationLink = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
             await navigator.clipboard.writeText(activationLink);
-
             console.log("Activation link:", activationLink);
-
             setButtonState(prev => ({ ...prev, [id]: "recovery" }));
         } catch (e) {
             console.error("Помилка при створенні посилання:", e);
@@ -116,10 +139,10 @@ export default function AdminComponent() {
         navigator.clipboard.writeText(activationLink);
 
         setCopyMessage(prev => ({ ...prev, [id]: true }));
-
         setTimeout(() => {
             setCopyMessage(prev => ({ ...prev, [id]: false }));
         }, 5000);
+
         await managerService.updateLastLogin(id);
         fetchManager(1);
     };
@@ -127,6 +150,7 @@ export default function AdminComponent() {
     const handleRecovery = (id: number) => {
         setButtonState(prev => ({ ...prev, [id]: "copy" }));
     };
+
     const handleBan = async (id: number) => {
         try {
             await managerService.banManager(id);
@@ -173,15 +197,15 @@ export default function AdminComponent() {
                 )}
 
                 <div className="stats-block">
-                    <h3>Orders statistic</h3>
-                    <ul>
-                        <li><strong>Total:</strong> {stats.total}</li>
-                        <li><strong>Agree:</strong> {stats.agree}</li>
-                        <li><strong>In work:</strong> {stats.inWork}</li>
-                        <li><strong>Disagree:</strong> {stats.disagree}</li>
-                        <li><strong>Dubbing:</strong> {stats.dubbing}</li>
-                        <li><strong>New:</strong> {stats.new}</li>
-                    </ul>
+                    <h3 className="stats-block-h3">Orders statistic</h3>
+                    <div className="stats-block-div">
+                        <span><strong>Total:</strong> {stats.total}</span>
+                        <span><strong>Agree:</strong> {stats.agree}</span>
+                        <span><strong>In work:</strong> {stats.inWork}</span>
+                        <span><strong>Disagree:</strong> {stats.disagree}</span>
+                        <span><strong>Dubbing:</strong> {stats.dubbing}</span>
+                        <span><strong>New:</strong> {stats.new}</span>
+                    </div>
                 </div>
             </div>
 
@@ -191,13 +215,35 @@ export default function AdminComponent() {
                         {managers.map(manager => (
                             <div key={manager.manager_id} className="manager-item">
                                 <div className="manager-info">
-                                    <div><strong>ID:</strong> {manager.manager_id}</div>
-                                    <div><strong>Name:</strong> {manager.name}</div>
-                                    <div><strong>Surname:</strong> {manager.surname}</div>
-                                    <div><strong>Email:</strong> {manager.email}</div>
-                                    <div><strong>Active:</strong> {manager.is_active}</div>
-                                    <div><strong>Last login:</strong> {manager.last_login ? new Date(manager.last_login).toLocaleString() : "null"}</div>
+                                    <div><strong>Id:</strong> {manager.manager_id}</div>
+                                    <div><strong>email:</strong> {manager.email}</div>
+                                    <div><strong>name:</strong> {manager.name}</div>
+                                    <div><strong>surname:</strong> {manager.surname}</div>
+                                    <div><strong>active:</strong> {manager.is_active}</div>
+                                    <div>
+                                        <strong>Last login:</strong>{" "}
+                                        {manager.last_login
+                                            ? new Date(manager.last_login).toLocaleDateString("en-US", {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "2-digit",
+                                            })
+                                            : "null"}
+                                    </div>
                                 </div>
+
+                                {managerStats[manager.email] && (
+                                    <div className="stats-block-manager-stats">
+                                        <ul>
+                                            {managerStats[manager.email].total > 0 && <li><strong>Total:</strong> {managerStats[manager.email].total}</li>}
+                                            {managerStats[manager.email].agree > 0 && <li><strong>Agree:</strong> {managerStats[manager.email].agree}</li>}
+                                            {managerStats[manager.email].inWork > 0 && <li><strong>In work:</strong> {managerStats[manager.email].inWork}</li>}
+                                            {managerStats[manager.email].disagree > 0 && <li><strong>Disagree:</strong> {managerStats[manager.email].disagree}</li>}
+                                            {managerStats[manager.email].dubbing > 0 && <li><strong>Dubbing:</strong> {managerStats[manager.email].dubbing}</li>}
+                                            {managerStats[manager.email].new > 0 && <li><strong>New:</strong> {managerStats[manager.email].new}</li>}
+                                        </ul>
+                                    </div>
+                                )}
 
                                 <div className="manager-buttons">
                                     {buttonState[manager.manager_id] === "activate" && (
@@ -217,19 +263,15 @@ export default function AdminComponent() {
                                             COPY TO CLIPBOARD
                                         </button>
                                     )}
-                                    <button className="ban-btn" onClick={() => handleBan(manager.manager_id)}>BAN
-                                    </button>
-                                    <button className="unban-btn"
-                                            onClick={() => handleUnban(manager.manager_id)}>UNBAN
-                                    </button>
-
+                                    <button className="ban-btn" onClick={() => handleBan(manager.manager_id)}>BAN</button>
+                                    <button className="unban-btn" onClick={() => handleUnban(manager.manager_id)}>UNBAN</button>
                                 </div>
+
                                 {copyMessage[manager.manager_id] && (
                                     <div className="copyMessage">
                                         Link copied to clipboard
                                     </div>
                                 )}
-
                             </div>
                         ))}
                     </div>
@@ -240,4 +282,3 @@ export default function AdminComponent() {
         </div>
     );
 }
-

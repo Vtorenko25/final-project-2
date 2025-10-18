@@ -36,6 +36,11 @@ class ManagerService {
   public async updateLastLogin(manager_id: number): Promise<IManager> {
     return await managerRepository.updateLastLogin(manager_id);
   }
+
+  public async getManagerStatistic(email): Promise<Record<string, number>> {
+    const stats = await managerRepository.getManagerStatistic(email);
+    return stats;
+  }
 }
 
 export const managerService = new ManagerService();

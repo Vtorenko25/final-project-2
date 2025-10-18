@@ -17,4 +17,5 @@ export const urlBuilder = {
     unbanManager:(id:number) => `${base}/managers/unban/${id}`,
     createPassword:(id:number) => `${base}/managers/${id}`,
     updateLastLogin:(id:number)=>`${base}/managers/last_login/${id}`,
+    getManagerStatistic: (email:string) => `${base}/managers/statistic/${email}`,
 };

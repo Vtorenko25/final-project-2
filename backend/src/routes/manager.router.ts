@@ -38,4 +38,6 @@ router.patch(
 // @ts-ignore
 router.put("/last_login/:id", managerController.updateLastLogin);
 
+router.get("/statistic/:email", managerController.getManagerStatistic);
+
 export const managerRouter = router;
