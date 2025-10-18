@@ -1,0 +1,325 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Manager/User API",
+    "version": "1.0.0",
+    "description": "Повне API для керування користувачами, менеджерами та коментарями"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Локальний сервер"
+    }
+  ],
+  "paths": {
+    "/auth/sign-in": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Вхід адміністратора",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Успішний вхід адміністратора",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponse" }
+              }
+            }
+          },
+          "401": { "description": "Невірний email або пароль" }
+        }
+      }
+    },
+    "/auth/sign-in/manager": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Вхід менеджера",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Успішний вхід менеджера",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponse" }
+              }
+            }
+          },
+          "401": { "description": "Невірний email або пароль / обліковий запис заблоковано" }
+        }
+      }
+    },
+    "/manager/create": {
+      "post": {
+        "tags": ["Manager"],
+        "summary": "Створення нового менеджера",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ManagerCreateDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Менеджер створений успішно", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Manager" } } } },
+          "400": { "description": "Помилка валідації даних" }
+        }
+      }
+    },
+    "/manager/{id}": {
+      "post": {
+        "tags": ["Manager"],
+        "summary": "Генерація лінку активації менеджера",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Лінк активації згенеровано", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ActivationLinkResponse" } } } },
+          "404": { "description": "Менеджер не знайдений" }
+        }
+      }
+    },
+    "/manager/ban/{id}": {
+      "patch": {
+        "tags": ["Manager"],
+        "summary": "Бан менеджера",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Менеджер заблокований", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ManagerStatusResponse" } } } },
+          "404": { "description": "Менеджер не знайдений" }
+        }
+      }
+    },
+    "/manager/unban/{id}": {
+      "patch": {
+        "tags": ["Manager"],
+        "summary": "Розбан менеджера",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Менеджер розблокований", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ManagerStatusResponse" } } } },
+          "404": { "description": "Менеджер не знайдений" }
+        }
+      }
+    },
+    "/manager/password/{id}": {
+      "post": {
+        "tags": ["Manager"],
+        "summary": "Створення пароля менеджера",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PasswordDto" } } }
+        },
+        "responses": {
+          "201": { "description": "Пароль створено", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Manager" } } } },
+          "403": { "description": "Обліковий запис заблоковано" }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Отримати список користувачів",
+        "responses": { "200": { "description": "Список користувачів", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } } } } } }
+      }
+    },
+    "/user/statistic": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Статистика користувачів",
+        "responses": { "200": { "description": "Статистика", "content": { "application/json": { "schema": { "type": "object", "additionalProperties": { "type": "integer" } } } } } }
+      }
+    },
+    "/user/{id}": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Оновити користувача",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserUpdateDto" } } }
+        },
+        "responses": {
+          "200": { "description": "Користувач оновлений", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "404": { "description": "Користувач не знайдений" }
+        }
+      }
+    },
+    "/comment": {
+      "get": {
+        "tags": ["Comment"],
+        "summary": "Отримати всі коментарі",
+        "responses": { "200": { "description": "Список коментарів", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Comment" } } } } } }
+      }
+    },
+    "/comment/{crmId}": {
+      "get": {
+        "tags": ["Comment"],
+        "summary": "Отримати коментарі по crmId",
+        "parameters": [{ "name": "crmId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Коментарі для crmId", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Comment" } } } } } }
+      }
+    },
+    "/comment/create": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Створити коментар",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CommentCreateDto" } } }
+        },
+        "responses": {
+          "201": { "description": "Коментар створено", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Comment" } } } },
+          "401": { "description": "Не авторизований" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "tokens": {
+            "type": "object",
+            "properties": {
+              "accessToken": { "type": "string" },
+              "refreshToken": { "type": "string" }
+            }
+          },
+          "email": { "type": "string" }
+        }
+      },
+      "ManagerCreateDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "surname": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["name", "surname", "email"]
+      },
+      "Manager": {
+        "type": "object",
+        "properties": {
+          "manager_id": { "type": "integer" },
+          "name": { "type": "string" },
+          "surname": { "type": "string" },
+          "email": { "type": "string" },
+          "is_active": { "type": "boolean" },
+          "last_login": { "type": "string" }
+        }
+      },
+      "ActivationLinkResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "AccessToken": { "type": "string" },
+          "expiresIn": { "type": "string" }
+        }
+      },
+      "ManagerStatusResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "manager": { "$ref": "#/components/schemas/Manager" }
+        }
+      },
+      "PasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": { "type": "string" }
+        },
+        "required": ["password"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "surname": { "type": "string" },
+          "email": { "type": "string" },
+          "phone": { "type": "string" },
+          "age": { "type": "integer" },
+          "course": { "type": "string" },
+          "course_format": { "type": "string" },
+          "course_type": { "type": "string" },
+          "sum": { "type": "number" },
+          "already_paid": { "type": "boolean" },
+          "group": { "type": "string" },
+          "manager": { "type": "string" },
+          "utm": { "type": "string" },
+          "msg": { "type": "string" },
+          "status": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "UserUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "surname": { "type": "string" },
+          "phone": { "type": "string" },
+          "age": { "type": "integer" },
+          "course": { "type": "string" },
+          "course_format": { "type": "string" },
+          "course_type": { "type": "string" },
+          "sum": { "type": "number" },
+          "already_paid": { "type": "boolean" },
+          "group": { "type": "string" },
+          "manager": { "type": "string" },
+          "utm": { "type": "string" },
+          "msg": { "type": "string" },
+          "status": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "crmId": { "type": "string" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        }
+      },
+      "CommentCreateDto": {
+        "type": "object",
+        "properties": {
+          "crmId": { "type": "string" },
+          "title": { "type": "string" },
+          "content": { "type": "string" }
+        },
+        "required": ["crmId", "content"]
+      }
+    }
+  }
+}

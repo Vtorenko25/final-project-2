@@ -1,7 +1,9 @@
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
+import swaggerUi from "swagger-ui-express";
 
+import swaggerDocument from "../docs/swagger.json";
 import { config } from "./configs/config";
 import { ApiError } from "./errors/api.error";
 import { authRouter } from "./routes/auth.router";
@@ -26,6 +28,8 @@ app.use("/auth", authRouter);
 app.use("/comment", commentRouter);
 
 app.use("/managers", managerRouter);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("*", (req, res, next) => {
   next(new ApiError("Route not found", 404));
