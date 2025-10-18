@@ -72,7 +72,7 @@ class ManagerController {
 
   public async banManager(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params; // беремо id з params
+      const { id } = req.params;
       const bannedManager = await managerService.banManager(id);
       res.status(200).json({
         message: `Manager ${id} has been banned`,

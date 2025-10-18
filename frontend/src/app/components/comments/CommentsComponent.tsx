@@ -5,7 +5,6 @@ import { ICommentComponentProps } from "@/app/models/ICommentComponentProps";
 import "./comments-component.css";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
 import { getCurrentManagerEmail } from "@/app/helpers/role";
-import {IUserUpdateDto} from "@/app/models/IUser";
 
 const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUser: any) => void }> = ({
                                                                                                           user,
@@ -20,9 +19,20 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
     const [showEditModal, setShowEditModal] = useState(false);
 
     const currentManager = getCurrentManagerEmail();
+    const isAdmin = currentManager === "admin@gmail.com";
 
-    const canComment = user.status === null || user.manager === null || (user.status === "In Work" && user.manager === currentManager);
-    const canEdit = user.status === null || user.manager === null || (user.status === "In Work" && user.manager === currentManager);
+
+    const canComment =
+        isAdmin ||
+        user.status === null ||
+        user.manager === null ||
+        (user.status === "In Work" && user.manager === currentManager);
+
+    const canEdit =
+        isAdmin ||
+        user.status === null ||
+        user.manager === null ||
+        (user.status === "In Work" && user.manager === currentManager);
 
     const submitComment = async () => {
         const text = newComment[user._id];
@@ -57,7 +67,7 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
                                 <div>{comment.manager}</div>
                                 <div>
                                     {comment.createdAt
-                                        ? new Date(comment.createdAt).toLocaleString("uk-UA", {
+                                        ? new Date(comment.createdAt).toLocaleDateString("uk-UA", {
                                             day: "2-digit",
                                             month: "long",
                                             year: "numeric",
@@ -107,4 +117,3 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
 };
 
 export default CommentComponent;
-

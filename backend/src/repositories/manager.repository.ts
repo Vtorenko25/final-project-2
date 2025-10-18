@@ -68,12 +68,6 @@ class ManagerRepository {
   public async getManagerStatistic(
     email: string,
   ): Promise<Record<string, number>> {
-    // const manager = await Managers.findOne({ email }).exec();
-
-    // if (!manager) {
-    //   throw new Error("Manager not found");
-    // }
-
     const filter = { manager: email };
 
     const total = await User.countDocuments(filter);

@@ -43,7 +43,7 @@ class UserController {
       );
       res.status(200).json(result);
     } catch (e) {
-      console.error("❌ Помилка в updateUserById:", e);
+      console.error("Помилка в updateUserById:", e);
       next(
         e instanceof ApiError
           ? e
