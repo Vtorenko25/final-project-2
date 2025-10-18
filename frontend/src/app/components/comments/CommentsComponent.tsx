@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { ICommentComponentProps } from "@/app/models/ICommentComponentProps";
 import "./comments-component.css";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
-import { getUserRole } from "@/app/helpers/role";
+import { getCurrentManagerEmail } from "@/app/helpers/role";
 
 const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUser: any) => void }> = ({
                                                                                                           user,
@@ -18,12 +18,10 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
     const [error, setError] = useState<string | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
 
-    const currentManager = getUserRole(); // поточний користувач (email або логін)
+    const currentManager = getCurrentManagerEmail();
 
-    // Можна писати коментар, якщо заявка "New" або якщо ця заявка належить поточному менеджеру
-    const canComment =
-        user.status === "New" ||
-        (user.manager && user.manager === currentManager);
+    const canComment = user.status === null || (user.status === "In Work" && user.manager === currentManager);
+    const canEdit = user.status === null || (user.status === "In Work" && user.manager === currentManager);
 
     const submitComment = async () => {
         const text = newComment[user._id];
@@ -77,9 +75,7 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
                         type="text"
                         value={newComment[user._id] || ""}
                         onChange={(e) => handleInputChange(user._id, e.target.value)}
-                        placeholder={
-                            canComment ? "Comment" : "Немає доступу для коментування"
-                        }
+                        placeholder={canComment ? "Comment" : "Немає доступу для коментування"}
                         disabled={loading || !canComment}
                     />
                     <button onClick={submitComment} disabled={loading || !canComment}>
@@ -89,7 +85,14 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
                 </div>
             </div>
 
-            <button className="button_edit" onClick={() => setShowEditModal(true)}>EDIT</button>
+            <button
+                className="button_edit"
+                onClick={() => canEdit && setShowEditModal(true)}
+                disabled={!canEdit}
+                title={!canEdit ? "Немає доступу до редагування" : "Редагувати"}
+            >
+                EDIT
+            </button>
 
             {showEditModal && (
                 <UserUpdateComponent
@@ -103,3 +106,4 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
 };
 
 export default CommentComponent;
+

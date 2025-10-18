@@ -222,7 +222,7 @@ export default function UsersComponent() {
                             <li>{displayValue(user.course)}</li>
                             <li>{displayValue(user.course_format)}</li>
                             <li>{displayValue(user.course_type)}</li>
-                            <li>{displayValue(user.status)}</li>
+                            <li>{displayValue(user.status || "New")}</li>
                             <li>{displayValue(user.sum)}</li>
                             <li>{displayValue(user.already_paid)}</li>
                             <li>{displayValue(user.group)}</li>

@@ -69,19 +69,24 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
     const handleSave = async () => {
         try {
             setLoading(true);
+
             const dto = {
                 ...formData,
+                manager: formData.status === "New" ? null : formData.manager,
                 age: formData.age ? Number(formData.age) : undefined,
                 sum: formData.sum ? Number(formData.sum) : undefined,
                 already_paid: formData.already_paid ? Number(formData.already_paid) : undefined,
             };
+
             const updatedUser = await userService.updateUserById(user._id, dto);
+
             setFormData({
                 ...updatedUser,
                 age: updatedUser.age?.toString() || "",
                 sum: updatedUser.sum?.toString() || "",
                 already_paid: updatedUser.already_paid?.toString() || "",
             });
+
             if (onUpdateUser) onUpdateUser(updatedUser);
             onClose();
         } catch (err: any) {

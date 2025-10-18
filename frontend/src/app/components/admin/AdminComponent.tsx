@@ -8,6 +8,7 @@ import { userService } from "@/app/services/user.service";
 import { IFormData } from "@/app/models/IFormData";
 import { IStatistic } from "@/app/models/IStatistic";
 import { IManager, IManagerCreate } from "@/app/models/IManager";
+import {passwordService} from "@/app/services/password.service";
 
 export default function AdminComponent() {
     const router = useRouter();
@@ -90,7 +91,7 @@ export default function AdminComponent() {
 
     const handleActivate = async (id: number) => {
         try {
-            const res = await managerService.generateActivationLinkManagers(id);
+            const res = await passwordService.createPassword(id);
             const token = res.AccessToken;
             const activationLink = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
 
@@ -109,10 +110,14 @@ export default function AdminComponent() {
         console.log(id);
     }
 
+    const copyToClipboard = async (id:number)=>{
+        console.log(id);
+    }
+
     const handleBan = async (id: number) => {
         try {
             await managerService.banManager(id);
-            fetchManager(1); // оновлюємо список менеджерів
+            fetchManager(1);
         } catch (err) {
             console.error("Помилка при бані менеджера:", err);
             alert("Не вдалося заблокувати менеджера.");
@@ -187,6 +192,9 @@ export default function AdminComponent() {
                                     </button>
                                     <button className="activate-btn"
                                             onClick={() => recoveryPassword(manager.manager_id)}>RECOVERY PASSWORD
+                                    </button>
+                                    <button className="activate-btn"
+                                            onClick={() => copyToClipboard(manager.manager_id)}>COPY TO CLIPBOARD
                                     </button>
                                     <button className="activate-btn"
                                             onClick={() => handleBan(manager.manager_id)}>BAN
