@@ -1,6 +1,6 @@
 
 1. Клонуйте репозиторій:
-   https://github.com/Vtorenko25/final-project/tree/master
+   https://github.com/Vtorenko25/final-project-2
 
 
 ## Запуск проекту
