@@ -5,6 +5,7 @@ import { ICommentComponentProps } from "@/app/models/ICommentComponentProps";
 import "./comments-component.css";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
 import { getCurrentManagerEmail } from "@/app/helpers/role";
+import {IUserUpdateDto} from "@/app/models/IUser";
 
 const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUser: any) => void }> = ({
                                                                                                           user,
@@ -20,8 +21,8 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
 
     const currentManager = getCurrentManagerEmail();
 
-    const canComment = user.status === null || (user.status === "In Work" && user.manager === currentManager);
-    const canEdit = user.status === null || (user.status === "In Work" && user.manager === currentManager);
+    const canComment = user.status === null || user.manager === null || (user.status === "In Work" && user.manager === currentManager);
+    const canEdit = user.status === null || user.manager === null || (user.status === "In Work" && user.manager === currentManager);
 
     const submitComment = async () => {
         const text = newComment[user._id];
