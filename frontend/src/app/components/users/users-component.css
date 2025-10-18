@@ -29,6 +29,11 @@
     background-color: #f5f5f5;
 }
 
+.user-row:hover {
+    background-color: green;
+    color: white;
+}
+
 /************************************BUTTONS***************************************/
 
 .filter-wrapper {

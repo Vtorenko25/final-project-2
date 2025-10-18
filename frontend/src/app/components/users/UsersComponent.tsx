@@ -40,8 +40,8 @@ export default function UsersComponent() {
     const [myOnly, setMyOnly] = useState(false);
 
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const sortColumn = searchParams.get("order") || "id";
-    const sortOrder = (searchParams.get("direction") as "asc" | "desc") || "asc";
+    const sortColumn = searchParams.get("order") || "created_at";
+    const sortOrder = (searchParams.get("direction") as "asc" | "desc") || "desc";
     const usersPerPage = 25;
 
     const displayValue = (value: any) => value === null || value === undefined || value === "" ? "null" : value;

@@ -4,6 +4,7 @@ import { FC, useState } from 'react';
 import { ICommentComponentProps } from "@/app/models/ICommentComponentProps";
 import "./comments-component.css";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
+import { getUserRole } from "@/app/helpers/role";
 
 const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUser: any) => void }> = ({
                                                                                                           user,
@@ -17,9 +18,16 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
     const [error, setError] = useState<string | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
 
+    const currentManager = getUserRole(); // поточний користувач (email або логін)
+
+    // Можна писати коментар, якщо заявка "New" або якщо ця заявка належить поточному менеджеру
+    const canComment =
+        user.status === "New" ||
+        (user.manager && user.manager === currentManager);
+
     const submitComment = async () => {
         const text = newComment[user._id];
-        if (!text) return;
+        if (!text || !canComment) return;
 
         setLoading(true);
         setError(null);
@@ -43,18 +51,19 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
 
             <div className="comments_block">
                 {comments[user._id]?.length ? (
-                    comments[user._id].map((comment) => (
+                    comments[user._id].slice(-3).map((comment) => (
                         <div className="comments_block_comment" key={comment.createdAt + comment.content}>
                             <div>{comment.content}</div>
                             <div className="comments_block_manager">
                                 <div>{comment.manager}</div>
-                                <div>{comment.createdAt
-                                    ? new Date(comment.createdAt).toLocaleString("uk-UA", {
-                                        day: "2-digit",
-                                        month: "long",
-                                        year: "numeric",
-                                    })
-                                    : "—"}
+                                <div>
+                                    {comment.createdAt
+                                        ? new Date(comment.createdAt).toLocaleString("uk-UA", {
+                                            day: "2-digit",
+                                            month: "long",
+                                            year: "numeric",
+                                        })
+                                        : "—"}
                                 </div>
                             </div>
                         </div>
@@ -68,10 +77,12 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
                         type="text"
                         value={newComment[user._id] || ""}
                         onChange={(e) => handleInputChange(user._id, e.target.value)}
-                        placeholder="Comment"
-                        disabled={loading}
+                        placeholder={
+                            canComment ? "Comment" : "Немає доступу для коментування"
+                        }
+                        disabled={loading || !canComment}
                     />
-                    <button onClick={submitComment} disabled={loading}>
+                    <button onClick={submitComment} disabled={loading || !canComment}>
                         {loading ? "Submitting..." : "Submit"}
                     </button>
                     {error && <p className="error">{error}</p>}
