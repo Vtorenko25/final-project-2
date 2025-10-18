@@ -4,21 +4,22 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import "./active-component.css";
 import { authService } from '@/app/services/auth.service';
+import { validatePassword } from '@/app/helpers/passwordValidator';
 
 export default function ActiveComponent() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [token, setToken] = useState<string | null>(null);
     const [managerId, setManagerId] = useState<number | null>(null);
+    const [errors, setErrors] = useState<string[]>([]);
+    const [touched, setTouched] = useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
 
     useEffect(() => {
         const urlToken = searchParams.get('token');
-
         const urlId = searchParams.get('manager_id');
-
 
         if (!urlToken || !urlId) {
             alert("Невірний URL: не переданий токен або ID менеджера");
@@ -35,9 +36,14 @@ export default function ActiveComponent() {
         setManagerId(idNumber);
     }, [searchParams]);
 
+    const handleBlur = () => {
+        const result = validatePassword(password);
+        setErrors(result.errors);
+        setTouched(true);
+    };
+
     const handleActivate = async () => {
         if (!token || managerId === null) {
-
             alert('Токен або ID менеджера не знайдено!');
             return;
         }
@@ -47,10 +53,14 @@ export default function ActiveComponent() {
             return;
         }
 
+        const result = validatePassword(password);
+        if (!result.valid) {
+            alert("Пароль не відповідає вимогам:\n" + result.errors.join("\n"));
+            return;
+        }
+
         try {
             await authService.activateAccount(token, password, managerId);
-            console.log(token, managerId, password);
-
             router.push('/login');
         } catch (error: any) {
             alert(error.message || 'Помилка активації');
@@ -61,23 +71,39 @@ export default function ActiveComponent() {
         <div className="active">
             <h2>Активація акаунта</h2>
 
-            <span>Пароль</span>
+            <label>Пароль</label>
             <input
+                type="password"
+                placeholder="Введіть пароль"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Введіть пароль"
-                type="password"
+                onBlur={handleBlur}
             />
+            {touched && errors.length > 0 && (
+                <ul className="error-list">
+                    {errors.map((err, i) => <li key={i}>{err}</li>)}
+                </ul>
+            )}
 
-            <span>Підтвердіть пароль</span>
+            <label>Підтвердіть пароль</label>
             <input
+                type="password"
+                placeholder="Підтвердіть пароль"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Підтвердіть пароль"
-                type="password"
+                onBlur={() => setTouched(true)}
             />
+            {confirmPassword && password !== confirmPassword && touched && (
+                <p className="error">Паролі не співпадають</p>
+            )}
 
-            <button onClick={handleActivate}>ACTIVATE</button>
+            <button
+                onClick={handleActivate}
+                disabled={errors.length > 0 || password !== confirmPassword}
+            >
+                ACTIVATE
+            </button>
         </div>
     );
 }
+
