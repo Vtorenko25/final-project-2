@@ -35,4 +35,7 @@ router.patch(
   passwordController.updatePassword,
 );
 
+// @ts-ignore
+router.put("/last_login/:id", managerController.updateLastLogin);
+
 export const managerRouter = router;

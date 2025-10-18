@@ -33,6 +33,9 @@ class ManagerService {
   public async unbanManager(id: string | number): Promise<IManager> {
     return await managerRepository.updateStatus(Number(id), true);
   }
+  public async updateLastLogin(manager_id: number): Promise<IManager> {
+    return await managerRepository.updateLastLogin(manager_id);
+  }
 }
 
 export const managerService = new ManagerService();

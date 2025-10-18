@@ -163,13 +163,14 @@ button.create:hover {
 .manager-item strong {
     color: #111;
 }
-
+/*******************************************BUTTONS***************************************/
 .manager-buttons {
     display: flex;
     gap: 10px;
     margin-top: 10px;
     margin-left: 150px;
     justify-content: flex-start;
+    position: relative;
 }
 
 .manager-buttons button {
@@ -179,18 +180,42 @@ button.create:hover {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    position: relative;
 }
 
-.activate-btn, .ban-btn, .unban-btn {
+.activate-btn {
     background-color: #28a745;
     color: white;
 }
 
-.activate-btn:hover, .ban-btn:hover, .unban-btn:hover {
+.activate-btn:hover {
     background-color: #218838;
 }
-.total {
-    margin-left: 80px;
+
+.ban-btn {
+    background-color: #dc3545;
+    color: white;
 }
 
+.ban-btn:hover {
+    background-color: #c82333;
+}
+
+.unban-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.unban-btn:hover {
+    background-color: #0069d9;
+}
+
+.copyMessage {
+    font-size: 0.85rem;
+    color: #28a745;
+    position: absolute;
+    top: 60px;
+    left: 500px;
+    margin-top: 4px;
+}
 

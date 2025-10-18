@@ -50,5 +50,19 @@ class ManagerRepository {
 
     return manager;
   }
+
+  public async updateLastLogin(manager_id: number): Promise<IManager> {
+    const manager = await Managers.findOneAndUpdate(
+      { manager_id },
+      { last_login: new Date().toISOString() }, // зберігаємо у форматі ISO
+      { new: true },
+    );
+
+    if (!manager) {
+      throw new Error("Manager not found");
+    }
+
+    return manager;
+  }
 }
 export const managerRepository = new ManagerRepository();

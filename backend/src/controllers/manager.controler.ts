@@ -95,6 +95,19 @@ class ManagerController {
       next(e);
     }
   }
+  public async updateLastLogin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const manager_id = Number(req.params.id);
+      if (isNaN(manager_id)) {
+        return res.status(400).json({ message: "Invalid manager id" });
+      }
+
+      const updatedManager = await managerService.updateLastLogin(manager_id);
+      res.status(200).json({ message: "Last login updated", manager: updatedManager });
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const managerController = new ManagerController();

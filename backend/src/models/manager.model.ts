@@ -12,7 +12,7 @@ const managerSchema = new Schema<IManager>(
       unique: true,
       match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Некоректний email"],
     },
-    is_active: { type: Boolean, default: false },
+    is_active: { type: Boolean, default: true },
     name: { type: String, required: true },
     surname: { type: String, required: true },
     last_login: { type: String, required: false, default: null },
