@@ -298,7 +298,6 @@ export default function UsersComponent() {
 
     const displayValue = (value: any) => value === null || value === undefined || value === "" ? "null" : value;
 
-    // ------------------ FILTERS ------------------
     useEffect(() => {
         const handler = setTimeout(() => setDebouncedFilters(filters), 500);
         return () => clearTimeout(handler);
@@ -322,7 +321,6 @@ export default function UsersComponent() {
         setMyOnly(false);
     };
 
-    // ------------------ USERS FETCH ------------------
     const fetchUsers = useCallback(async () => {
         try {
             const initialData = await userService.getAllUsers(page) as { data: IUser[]; total: number };
@@ -331,7 +329,6 @@ export default function UsersComponent() {
 
             let fetchedUsers: IUser[] = initialData.data ?? [];
 
-            // FILTERS
             fetchedUsers = fetchedUsers.filter(user => {
                 return Object.entries(debouncedFilters).every(([key, value]) => {
                     if (!value) return true;
@@ -360,7 +357,7 @@ export default function UsersComponent() {
 
     useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
-    // ------------------ COMMENTS ------------------
+
     const loadComments = async (user: IUser) => {
         if (comments[user._id]) return;
         try {
