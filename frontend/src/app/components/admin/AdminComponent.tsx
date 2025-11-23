@@ -46,7 +46,7 @@ export default function AdminComponent() {
             fetchManager(1);
         } catch (error: any) {
             console.error('Помилка створення менеджера:', error);
-            alert(error?.response?.data?.message || 'Сталася помилка при створенні менеджера');
+            // alert(error?.response?.data?.message || 'Сталася помилка при створенні менеджера');
         }
     };
 

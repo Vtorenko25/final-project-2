@@ -8,22 +8,25 @@ import { authService } from '@/app/services/auth.service';
 export default function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(''); // ← state для помилок
     const router = useRouter();
 
     const handleLogin = async () => {
+        setError(''); // очистити попередню помилку
+
         try {
             let tokens;
 
             if (email === 'admin@gmail.com') {
                 tokens = await authService.signIn(email, password);
-            }
-            else {
+            } else {
                 tokens = await authService.signInManager(email, password);
             }
+
             localStorage.setItem('tokens', JSON.stringify(tokens));
             router.push('/orders');
-        } catch (error: any) {
-            alert(error.message || 'Помилка авторизації');
+        } catch (err: any) {
+            setError(err.message); // ← показ помилки у формі
         }
     };
 
@@ -35,6 +38,7 @@ export default function LoginComponent() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
             />
+
             <span>Password</span>
             <input
                 value={password}
@@ -42,7 +46,12 @@ export default function LoginComponent() {
                 placeholder="Password"
                 type="password"
             />
+
+            {/* Показ помилки */}
+            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+
             <button onClick={handleLogin}>LOGIN</button>
         </div>
     );
 }
+
