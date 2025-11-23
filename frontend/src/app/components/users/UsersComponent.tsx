@@ -732,7 +732,6 @@ export default function UsersComponent() {
                             <li>{user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric'}) : 'null'}</li>
                             <li>{displayValue(user.manager || 'null')}</li>
                         </ul>
-
                         {openUserId === user._id && (
                             <CommentComponent
                                 user={user}
@@ -757,3 +756,12 @@ export default function UsersComponent() {
         </div>
     );
 }
+
+
+
+
+
+
+
+
+

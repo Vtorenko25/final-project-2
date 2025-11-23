@@ -27,9 +27,23 @@ export interface IUser {
 export interface IUserListQuery {
   limit?: number;
   page?: number;
-  search?: string;
   order?: OrderEnum;
   orderBy?: UserListOrderEnum;
+
+  // Нові фільтри для бекенду
+  name?: string;
+  surname?: string;
+  email?: string;
+  phone?: string;
+  age?: string;
+  course?: string;
+  course_format?: string;
+  course_type?: string;
+  status?: string;
+  group?: string;
+  startDate?: string;
+  endDate?: string;
+  myOnly?: boolean; // якщо потрібно фільтрувати лише за менеджером
 }
 
 export interface IUserListStatistic {

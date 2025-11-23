@@ -32,10 +32,8 @@ class UserController {
   public async updateUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const tokenPayload = res.locals.tokenPayload as ITokenPayload;
-
       const userId = req.params.id;
       const dto = req.body as IUserUpdateDto;
-
       const result = await userService.updateUserById(
         tokenPayload,
         userId,

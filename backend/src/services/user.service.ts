@@ -15,8 +15,7 @@ class UserService {
   }
 
   public async getAllUsersStatistic(): Promise<Record<string, number>> {
-    const stats = await userRepository.getAllUsersStatistic();
-    return stats;
+    return await userRepository.getAllUsersStatistic();
   }
 
   public async updateUserById(
@@ -26,7 +25,6 @@ class UserService {
   ): Promise<IUser> {
     const user = await userRepository.getById(userId);
     if (!user) throw new ApiError("User not found", 404);
-
     return await userRepository.updateById(userId, dto);
   }
 }

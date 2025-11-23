@@ -16,10 +16,6 @@ router.get(
 
 router.get("/statistic", userController.getAllUsersStatistic);
 
-router.put(
-  "/:id",
-  // authMiddleware.checkAccessToken,
-  userController.updateUserById,
-);
+router.put("/:id", userController.updateUserById);
 
 export const userRouter = router;

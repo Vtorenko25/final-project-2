@@ -5,8 +5,8 @@ import { OrderEnum } from "../enums/order.enum";
 import { UserListOrderEnum } from "../enums/user-list-order.enum";
 
 export class UserValidator {
-  private static name = joi.string().min(3).max(50).trim();
-  private static surname = joi.string().min(3).max(50).trim();
+  private static name = joi.string().min(2).max(50).trim();
+  private static surname = joi.string().min(2).max(50).trim();
   private static email = joi.string().regex(regexConstant.EMAIL).trim();
   private static phone = joi.string().regex(regexConstant.PHONE).trim();
   private static age = joi.number().min(18).max(200);
@@ -19,6 +19,8 @@ export class UserValidator {
   private static manager = joi.string().min(3).max(20).trim();
   private static password = joi.string().regex(regexConstant.PASSWORD).trim();
   private static group = joi.string().min(3).max(10).trim();
+  private static startDate = joi.date().iso();
+  private static endDate = joi.date().iso();
 
   public static create = joi.object({
     name: this.name.required(),
@@ -52,8 +54,21 @@ export class UserValidator {
   public static listQuery = joi.object({
     page: joi.number().min(1).default(1),
     limit: joi.number().min(1).max(25).default(25),
-    search: joi.string().trim(),
     order: joi.string().valid(...Object.values(OrderEnum)),
     orderBy: joi.string().valid(...Object.values(UserListOrderEnum)),
+
+    name: this.name.optional(),
+    surname: this.surname.optional(),
+    email: this.email.optional(),
+    phone: this.phone.optional(),
+    age: this.age.optional(),
+    course: this.course.optional(),
+    course_format: this.course_format.optional(),
+    course_type: this.course_type.optional(),
+    status: this.status.optional(),
+    group: this.group.optional(),
+    myOnly: joi.string().optional(),
+    startDate: this.startDate.optional(),
+    endDate: this.endDate.optional(),
   });
 }
