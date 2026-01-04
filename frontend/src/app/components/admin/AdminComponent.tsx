@@ -11,14 +11,8 @@ import { passwordService } from "@/app/services/password.service";
 
 export default function AdminComponent() {
     const [showForm, setShowForm] = useState(false);
-    const [formData, setFormData] = useState<IFormData>({
-        email: '',
-        name: '',
-        surname: ''
-    });
-    const [stats, setStats] = useState<IStatistic>({
-        total: 0, agree: 0, inWork: 0, disagree: 0, dubbing: 0, new: 0
-    });
+    const [formData, setFormData] = useState<IFormData>({ email: '', name: '', surname: '' });
+    const [stats, setStats] = useState<IStatistic>({ total: 0, agree: 0, inWork: 0, disagree: 0, dubbing: 0, new: 0 });
     const [managers, setManagers] = useState<IManager[]>([]);
     const [buttonState, setButtonState] = useState<Record<number, "activate" | "recovery" | "copy">>({});
     const [copyMessage, setCopyMessage] = useState<Record<number, boolean>>({});
@@ -37,16 +31,15 @@ export default function AdminComponent() {
                 email: formData.email!,
                 name: formData.name!,
                 surname: formData.surname!,
-                is_active: formData.is_active ?? "true",
-                last_login: formData.last_login ?? ""
+                is_active: "true",
+                last_login: ""
             };
             await managerService.createManager(managerDto);
             setFormData({ email: '', name: '', surname: '' });
             setShowForm(false);
-            fetchManager(1);
-        } catch (error: any) {
+            fetchManagers(1);
+        } catch (error) {
             console.error('Помилка створення менеджера:', error);
-            // alert(error?.response?.data?.message || 'Сталася помилка при створенні менеджера');
         }
     };
 
@@ -54,6 +47,7 @@ export default function AdminComponent() {
         setShowForm(false);
         setFormData({ email: '', name: '', surname: '' });
     };
+
 
     const fetchStats = async () => {
         try {
@@ -64,7 +58,8 @@ export default function AdminComponent() {
         }
     };
 
-    const fetchManager = async (page: number) => {
+
+    const fetchManagers = async (page: number) => {
         try {
             const res = await managerService.getAllManagers(page);
             const managersList: IManager[] = (res.data ?? []).map((m: IManager) => ({
@@ -89,10 +84,10 @@ export default function AdminComponent() {
         }
     };
 
+
     const fetchManagerStats = async (email: string) => {
         try {
             const data = await userService.getManagerStatistic(email);
-
             if (data.total || data.agree || data.inWork || data.disagree || data.dubbing || data.new) {
                 setManagerStats(prev => ({ ...prev, [email]: data }));
             } else {
@@ -109,42 +104,34 @@ export default function AdminComponent() {
 
     useEffect(() => {
         fetchStats();
-        fetchManager(1);
+        fetchManagers(1);
     }, []);
 
-
-    useEffect(() => {
-        managers.forEach(m => fetchManagerStats(m.email));
-    }, [managers]);
-
-
-    const handleActivate = async (id: number) => {
+    const handleActivate = async (id: number, email: string) => {
         try {
             const res = await passwordService.createPassword(id);
             const token = res.AccessToken;
-            const activationLink = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
-            await navigator.clipboard.writeText(activationLink);
-            console.log("Activation link:", activationLink);
+            const link = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
+            await navigator.clipboard.writeText(link);
             setButtonState(prev => ({ ...prev, [id]: "recovery" }));
-        } catch (e) {
-            console.error("Помилка при створенні посилання:", e);
+            fetchManagerStats(email);
+        } catch (err) {
+            console.error(err);
             alert("Не вдалося створити посилання для активації.");
         }
     };
 
-    const handleCopy = async (id: number) => {
+    const handleCopy = async (id: number, email: string) => {
         const res = await passwordService.createPassword(id);
         const token = res.AccessToken;
-        const activationLink = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
-        navigator.clipboard.writeText(activationLink);
+        const link = `http://localhost:3000/activate?token=${token}&manager_id=${id}`;
+        await navigator.clipboard.writeText(link);
 
         setCopyMessage(prev => ({ ...prev, [id]: true }));
-        setTimeout(() => {
-            setCopyMessage(prev => ({ ...prev, [id]: false }));
-        }, 5000);
+        setTimeout(() => setCopyMessage(prev => ({ ...prev, [id]: false })), 5000);
 
         await managerService.updateLastLogin(id);
-        fetchManager(1);
+        fetchManagerStats(email);
     };
 
     const handleRecovery = (id: number) => {
@@ -154,9 +141,9 @@ export default function AdminComponent() {
     const handleBan = async (id: number) => {
         try {
             await managerService.banManager(id);
-            fetchManager(1);
+            fetchManagers(1);
         } catch (err) {
-            console.error("Помилка при бані менеджера:", err);
+            console.error(err);
             alert("Не вдалося заблокувати менеджера.");
         }
     };
@@ -164,9 +151,9 @@ export default function AdminComponent() {
     const handleUnban = async (id: number) => {
         try {
             await managerService.unbanManager(id);
-            fetchManager(1);
+            fetchManagers(1);
         } catch (err) {
-            console.error("Помилка при розбані менеджера:", err);
+            console.error(err);
             alert("Не вдалося розблокувати менеджера.");
         }
     };
@@ -180,14 +167,11 @@ export default function AdminComponent() {
                     <div className="form-overlay">
                         <form className="manager-form" onSubmit={handleCreate}>
                             <label>Email:</label>
-                            <input type="email" name="email" placeholder="Email"
-                                   value={formData.email} onChange={handleChange} required />
+                            <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
                             <label>Name:</label>
-                            <input type="text" name="name" placeholder="Name"
-                                   value={formData.name} onChange={handleChange} required />
+                            <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
                             <label>Surname:</label>
-                            <input type="text" name="surname" placeholder="Surname"
-                                   value={formData.surname} onChange={handleChange} required />
+                            <input type="text" name="surname" placeholder="Surname" value={formData.surname} onChange={handleChange} required />
                             <div className="buttons">
                                 <button type="button" className="cancel" onClick={handleCancel}>CANCEL</button>
                                 <button type="submit" className="create">CREATE</button>
@@ -210,74 +194,42 @@ export default function AdminComponent() {
             </div>
 
             <div className="managers-block">
-                {managers.length > 0 ? (
-                    <div className="managers-block-list">
-                        {managers.map(manager => (
-                            <div key={manager.manager_id} className="manager-item">
-                                <div className="manager-info">
-                                    <div><strong>Id:</strong> {manager.manager_id}</div>
-                                    <div><strong>email:</strong> {manager.email}</div>
-                                    <div><strong>name:</strong> {manager.name}</div>
-                                    <div><strong>surname:</strong> {manager.surname}</div>
-                                    <div><strong>active:</strong> {manager.is_active}</div>
-                                    <div>
-                                        <strong>Last login:</strong>{" "}
-                                        {manager.last_login
-                                            ? new Date(manager.last_login).toLocaleDateString("en-US", {
-                                                year: "numeric",
-                                                month: "long",
-                                                day: "2-digit",
-                                            })
-                                            : "null"}
-                                    </div>
-                                </div>
+                {managers.length > 0 ? managers.map(manager => (
+                    <div key={manager.manager_id} className="manager-item">
+                        <div className="manager-info">
+                            <div><strong>Id:</strong> {manager.manager_id}</div>
+                            <div><strong>Email:</strong> {manager.email}</div>
+                            <div><strong>Name:</strong> {manager.name}</div>
+                            <div><strong>Surname:</strong> {manager.surname}</div>
+                            <div><strong>Active:</strong> {manager.is_active}</div>
+                            <div><strong>Last login:</strong> {manager.last_login ? new Date(manager.last_login).toLocaleDateString() : "null"}</div>
+                        </div>
 
-                                {managerStats[manager.email] && (
-                                    <div className="stats-block-manager-stats">
-                                        <ul>
-                                            {managerStats[manager.email].total > 0 && <li><strong>Total:</strong> {managerStats[manager.email].total}</li>}
-                                            {managerStats[manager.email].agree > 0 && <li><strong>Agree:</strong> {managerStats[manager.email].agree}</li>}
-                                            {managerStats[manager.email].inWork > 0 && <li><strong>In work:</strong> {managerStats[manager.email].inWork}</li>}
-                                            {managerStats[manager.email].disagree > 0 && <li><strong>Disagree:</strong> {managerStats[manager.email].disagree}</li>}
-                                            {managerStats[manager.email].dubbing > 0 && <li><strong>Dubbing:</strong> {managerStats[manager.email].dubbing}</li>}
-                                            {managerStats[manager.email].new > 0 && <li><strong>New:</strong> {managerStats[manager.email].new}</li>}
-                                        </ul>
-                                    </div>
-                                )}
-
-                                <div className="manager-buttons">
-                                    {buttonState[manager.manager_id] === "activate" && (
-                                        <button className="activate-btn"
-                                                onClick={() => handleActivate(manager.manager_id)}>
-                                            ACTIVATE
-                                        </button>
-                                    )}
-                                    {buttonState[manager.manager_id] === "recovery" && (
-                                        <button className="activate-btn"
-                                                onClick={() => handleRecovery(manager.manager_id)}>
-                                            RECOVERY PASSWORD
-                                        </button>
-                                    )}
-                                    {buttonState[manager.manager_id] === "copy" && (
-                                        <button className="activate-btn" onClick={() => handleCopy(manager.manager_id)}>
-                                            COPY TO CLIPBOARD
-                                        </button>
-                                    )}
-                                    <button className="ban-btn" onClick={() => handleBan(manager.manager_id)}>BAN</button>
-                                    <button className="unban-btn" onClick={() => handleUnban(manager.manager_id)}>UNBAN</button>
-                                </div>
-
-                                {copyMessage[manager.manager_id] && (
-                                    <div className="copyMessage">
-                                        Link copied to clipboard
-                                    </div>
-                                )}
+                        {managerStats[manager.email] && (
+                            <div className="stats-block-manager-stats">
+                                <ul>
+                                    {Object.entries(managerStats[manager.email]).map(([key, value]) => value > 0 && <li key={key}><strong>{key}:</strong> {value}</li>)}
+                                </ul>
                             </div>
-                        ))}
+                        )}
+
+                        <div className="manager-buttons">
+                            {buttonState[manager.manager_id] === "activate" &&
+                                <button className="activate-btn" onClick={() => handleActivate(manager.manager_id, manager.email)}>ACTIVATE</button>
+                            }
+                            {buttonState[manager.manager_id] === "recovery" &&
+                                <button className="activate-btn" onClick={() => handleRecovery(manager.manager_id)}>RECOVERY PASSWORD</button>
+                            }
+                            {buttonState[manager.manager_id] === "copy" &&
+                                <button className="activate-btn" onClick={() => handleCopy(manager.manager_id, manager.email)}>COPY TO CLIPBOARD</button>
+                            }
+                            <button className="ban-btn" onClick={() => handleBan(manager.manager_id)}>BAN</button>
+                            <button className="unban-btn" onClick={() => handleUnban(manager.manager_id)}>UNBAN</button>
+                        </div>
+
+                        {copyMessage[manager.manager_id] && <div className="copyMessage">Link copied to clipboard</div>}
                     </div>
-                ) : (
-                    <p>No managers found</p>
-                )}
+                )) : <p>No managers found</p>}
             </div>
         </div>
     );

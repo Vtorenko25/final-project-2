@@ -1,66 +1,42 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import "./pagination-component.css"
+import "./pagination-component.css";
 
-export default function PaginationComponent() {
+interface PaginationProps {
+    totalItems: number;
+    itemsPerPage: number;
+}
+
+export default function PaginationComponent({ totalItems, itemsPerPage }: PaginationProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const totalPages = 20;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
     const rawPage = +(searchParams.get('page') || '1');
-
-    const page = Math.min(Math.max(rawPage, 1), totalPages);
+    const page = Math.min(Math.max(rawPage, 1), totalPages || 1);
 
     const handlePageClick = (num: number) => {
         if (num >= 1 && num <= totalPages && num !== page) {
-            router.push(`?page=${num}`);
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', num.toString());
+            router.push(`${window.location.pathname}?${params.toString()}`);
         }
     };
 
     const createPagination = () => {
         const buttons: (number | string)[] = [];
 
-        if (page === 1) {
-            for (let i = 1; i <= 7; i++) buttons.push(i);
-            buttons.push('nextDots');
-            buttons.push(totalPages);
-            buttons.push('nextArrow');
-        }
-        else if (page > 1 && page <= 7) {
-            buttons.push('prevArrow');
-            for (let i = 1; i <= 7; i++) buttons.push(i);
-            buttons.push('nextDots');
-            buttons.push(totalPages);
-            buttons.push('nextArrow');
-        }
-        else if (page >= 14 && page < totalPages) {
-            buttons.push('prevArrow');
-            buttons.push(1);
-            buttons.push('prevDots');
-            for (let i = 14; i <= totalPages; i++) buttons.push(i);
-            buttons.push('nextArrow');
-        }
-        else if (page === totalPages) {
-            buttons.push('prevArrow');
-            buttons.push(1);
-            buttons.push('prevDots');
-            for (let i = 14; i <= totalPages; i++) buttons.push(i);
-        }
-        else {
-            buttons.push('prevArrow');
-            buttons.push(1);
-            buttons.push('prevDots');
+        if (totalPages <= 7) {
 
-            const start = page - 3;
-            const end = page + 3;
-            for (let i = start; i <= end; i++) {
-                buttons.push(i);
-            }
+            for (let i = 1; i <= totalPages; i++) buttons.push(i);
+        } else {
 
-            buttons.push('nextDots');
-            buttons.push(totalPages);
-            buttons.push('nextArrow');
+            if (page > 4) buttons.push(1, 'prevDots');
+            const start = Math.max(1, page - 3);
+            const end = Math.min(totalPages, page + 3);
+            for (let i = start; i <= end; i++) buttons.push(i);
+            if (page < totalPages - 3) buttons.push('nextDots', totalPages);
         }
 
         return buttons;
@@ -68,23 +44,18 @@ export default function PaginationComponent() {
 
     const paginationButtons = createPagination();
 
+    if (totalPages <= 1) return null;
+
     return (
         <div className="paginationButtons">
+            <button
+                onClick={() => handlePageClick(page - 1)}
+                disabled={page === 1}
+            >
+                ←
+            </button>
+
             {paginationButtons.map((btn, idx) => {
-                if (btn === 'prevArrow') {
-                    return (
-                        <button key={idx} onClick={() => handlePageClick(page - 1)}>
-                            ←
-                        </button>
-                    );
-                }
-                if (btn === 'nextArrow') {
-                    return (
-                        <button key={idx} onClick={() => handlePageClick(page + 1)}>
-                            →
-                        </button>
-                    );
-                }
                 if (btn === 'prevDots') {
                     return (
                         <button key={idx} onClick={() => handlePageClick(Math.max(page - 7, 1))}>
@@ -109,8 +80,14 @@ export default function PaginationComponent() {
                     </button>
                 );
             })}
+
+            <button
+                onClick={() => handlePageClick(page + 1)}
+                disabled={page === totalPages}
+            >
+                →
+            </button>
         </div>
     );
 }
-
 
