@@ -49,7 +49,7 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
 
 
     useEffect(() => {
-        const handler = setTimeout(() => setDebouncedFilters(filters), 500); // 500ms debounce
+        const handler = setTimeout(() => setDebouncedFilters(filters), 500);
         return () => clearTimeout(handler);
     }, [filters]);
 

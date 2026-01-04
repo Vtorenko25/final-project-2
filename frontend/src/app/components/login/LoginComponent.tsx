@@ -8,11 +8,11 @@ import { authService } from '@/app/services/auth.service';
 export default function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // ← state для помилок
+    const [error, setError] = useState('');
     const router = useRouter();
 
     const handleLogin = async () => {
-        setError(''); // очистити попередню помилку
+        setError('');
 
         try {
             let tokens;
@@ -26,7 +26,7 @@ export default function LoginComponent() {
             localStorage.setItem('tokens', JSON.stringify(tokens));
             router.push('/orders');
         } catch (err: any) {
-            setError(err.message); // ← показ помилки у формі
+            setError(err.message);
         }
     };
 
@@ -47,7 +47,6 @@ export default function LoginComponent() {
                 type="password"
             />
 
-            {/* Показ помилки */}
             {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
 
             <button onClick={handleLogin}>LOGIN</button>
