@@ -2,6 +2,7 @@ import { urlBuilder } from "@/app/services/api.service";
 import {IUser, IUserUpdateDto} from "@/app/models/IUser";
 
 export const userService = {
+
     getAllUsers: async (page: number):Promise<{ data: IUser[]; total: number }> => {
         try {
             const tokensPair = localStorage.getItem('tokens');
@@ -30,6 +31,7 @@ export const userService = {
             throw error;
         }
     },
+
 
     getUsersStatistic: async () => {
         try {

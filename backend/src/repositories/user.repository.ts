@@ -21,7 +21,7 @@ class UserRepository {
       filterObj.course_type = { $regex: query.course_type, $options: "i" };
     if (query.status) filterObj.status = query.status;
     if (query.group) filterObj.group = query.group;
-    if (query.myOnly) filterObj.manager = query.myOnly; // можна передавати роль менеджера
+    if (query.myOnly) filterObj.manager = query.myOnly;
 
     if (query.startDate && query.endDate) {
       filterObj.created_at = {
