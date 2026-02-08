@@ -2,7 +2,9 @@ import {base} from "@/app/constans/urls";
 
 export const urlBuilder = {
     getAllUsers: (page: number) => `${base}/users?page=${page}`,
-    getFilterUsers: (query: string) => `${base}/users${query}`,
+    getFilterUsers: (query?: string) => {
+        return query ? `${base}/users?${query}` : `${base}/users`;
+    },
     getUsersStatistic: () => `${base}/users/statistic`,
     authUser: () => `${base}/auth/sign-in`,
     authManager: () => `${base}/auth/sign-in/manager`,

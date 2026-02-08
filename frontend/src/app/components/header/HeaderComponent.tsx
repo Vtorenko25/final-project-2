@@ -1,13 +1,15 @@
 'use client';
-import React from "react";
 
-interface HeaderProps {
+import React from "react";
+import "./header-component.css";
+
+interface HeaderComponentProps {
     sortColumn: string;
     sortOrder: "asc" | "desc";
     onSortChange: (column: string, order: "asc" | "desc") => void;
 }
 
-const columns = [
+const COLUMNS = [
     { key: "id", label: "ID" },
     { key: "name", label: "Name" },
     { key: "surname", label: "Surname" },
@@ -21,38 +23,38 @@ const columns = [
     { key: "sum", label: "Sum" },
     { key: "already_paid", label: "Paid" },
     { key: "group", label: "Group" },
-    { key: "created_at", label: "Created" },
+    { key: "created_at", label: "Created At" },
     { key: "manager", label: "Manager" },
 ];
 
-const ORDER_BY_MAP: Record<string, string> = {
-    name: "name",
-    age: "age",
-    created_at: "createdAt",
-};
+export default function HeaderComponent({ sortColumn, sortOrder, onSortChange }: HeaderComponentProps) {
 
-export default function HeaderComponent({ sortColumn, sortOrder, onSortChange }: HeaderProps) {
-    const handleSort = (key: string) => {
-        let order: "asc" | "desc" = "asc";
-        if (sortColumn === ORDER_BY_MAP[key] && sortOrder === "asc") {
-            order = "desc";
+    const handleHeaderClick = (columnKey: string) => {
+        if(columnKey === sortColumn){
+            const newOrder = sortOrder === "asc" ? "desc" : "asc";
+            onSortChange(columnKey, newOrder);
+        } else {
+            onSortChange(columnKey, "asc");
         }
-        onSortChange(key, order);
-    };
+    }
+
+    const renderSortIcon = (columnKey: string) => {
+        if(columnKey !== sortColumn) return "⇅";
+        return sortOrder === "asc" ? "▲" : "▼";
+    }
 
     return (
-        <ul className="user-row header">
-            {columns.map(col => (
+        <ul className="user-header">
+            {COLUMNS.map(col => (
                 <li
                     key={col.key}
-                    className={sortColumn === ORDER_BY_MAP[col.key] ? "sorted" : ""}
-                    onClick={() => handleSort(col.key)}
+                    className="user-header-cell"
+                    onClick={() => handleHeaderClick(col.key)}
                     style={{ cursor: "pointer" }}
                 >
-                    {col.label}
-                    {sortColumn === ORDER_BY_MAP[col.key] ? (sortOrder === "asc" ? " ▲" : " ▼") : ""}
+                    {col.label} {renderSortIcon(col.key)}
                 </li>
             ))}
         </ul>
-    );
+    )
 }
