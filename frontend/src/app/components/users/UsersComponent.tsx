@@ -51,13 +51,11 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
     const displayValue = (value: any) =>
         value === null || value === undefined || value === "" ? "null" : value;
 
-    // ⬇️ синхронізація page з URL
     useEffect(() => {
         const newPage = parseInt(searchParams.get("page") || "1", 10);
         setPage(newPage);
     }, [searchParams]);
 
-    // ⬇️ ініціалізація фільтрів і сортування з URL
     useEffect(() => {
         const newFilters = { ...defaultFilters };
         Object.keys(defaultFilters).forEach(key => {
@@ -78,7 +76,6 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
         return () => clearTimeout(handler);
     }, [filters]);
 
-    // ⬇️ запис у URL
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
