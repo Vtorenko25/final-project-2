@@ -22,13 +22,13 @@ export default function ActiveComponent() {
         const urlId = searchParams.get('manager_id');
 
         if (!urlToken || !urlId) {
-            alert("Невірний URL: не переданий токен або ID менеджера");
+            console.log("Невірний URL: не переданий токен або ID менеджера");
             return;
         }
 
         const idNumber = Number(urlId);
         if (isNaN(idNumber)) {
-            alert("Некоректний ID менеджера");
+            console.log("Некоректний ID менеджера");
             return;
         }
 
@@ -44,18 +44,18 @@ export default function ActiveComponent() {
 
     const handleActivate = async () => {
         if (!token || managerId === null) {
-            alert('Токен або ID менеджера не знайдено!');
+            console.log('Токен або ID менеджера не знайдено!');
             return;
         }
 
         if (password !== confirmPassword) {
-            alert('Паролі не співпадають!');
+            console.log('Паролі не співпадають!');
             return;
         }
 
         const result = validatePassword(password);
         if (!result.valid) {
-            alert("Пароль не відповідає вимогам:\n" + result.errors.join("\n"));
+            console.log("Пароль не відповідає вимогам:\n" + result.errors.join("\n"));
             return;
         }
 
@@ -63,7 +63,7 @@ export default function ActiveComponent() {
             await authService.activateAccount(token, password, managerId);
             router.push('/login');
         } catch (error: any) {
-            alert(error.message || 'Помилка активації');
+            console.log(error.message || 'Помилка активації');
         }
     };
 

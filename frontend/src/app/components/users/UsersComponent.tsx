@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { IUser } from "@/app/models/IUser";
 import { IComment } from "@/app/models/IComment";
@@ -31,6 +31,7 @@ const defaultFilters: Record<string, string> = {
 export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersComponentProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const isFirstRender = useRef(true);
 
     const [users, setUsers] = useState<IUser[]>([]);
     const [openUserId, setOpenUserId] = useState<string | null>(null);
@@ -45,14 +46,27 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
     const sortColumn = searchParams.get("order") || "created_at";
     const sortOrder = (searchParams.get("direction") as "asc" | "desc") || "desc";
 
-    const displayValue = (value: any) => value === null || value === undefined || value === "" ? "null" : value;
+    const displayValue = (value: any) =>
+        value === null || value === undefined || value === "" ? "null" : value;
+
+
+    useEffect(() => {
+        const newFilters = { ...defaultFilters };
+
+        Object.keys(defaultFilters).forEach((key) => {
+            const val = searchParams.get(key);
+            if (val) newFilters[key] = val;
+        });
+
+        setFilters(newFilters);
+        setDebouncedFilters(newFilters);
+    }, []);
 
 
     useEffect(() => {
         const handler = setTimeout(() => setDebouncedFilters(filters), 500);
         return () => clearTimeout(handler);
     }, [filters]);
-
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -61,6 +75,11 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
             if (value.trim()) params.set(field, value);
             else params.delete(field);
         });
+
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
 
         params.set("page", "1");
         router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false });
@@ -85,14 +104,14 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
             params.set("page", page.toString());
             params.set("limit", usersPerPage.toString());
 
-            Object.entries(debouncedFilters).forEach(([k, v]) => { if (v) params.set(k, v); });
+            Object.entries(debouncedFilters).forEach(([k, v]) => {
+                if (v) params.set(k, v);
+            });
+
             if (myOnly && getUserRole()) params.set("myOnly", getUserRole()!);
 
             const response = await userService.getFilterUsers(`?${params.toString()}`);
-            let fetchedUsers: IUser[] = response.data;
-
-            fetchedUsers = fetchedUsers.sort((a, b) => a._id > b._id ? -1 : 1);
-            setUsers(fetchedUsers);
+            setUsers(response.data);
             setTotalUsers(response.total);
         } catch (err) {
             console.error("Помилка завантаження:", err);
@@ -101,11 +120,14 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
         }
     }, [page, debouncedFilters, myOnly, usersPerPage, setTotalUsers]);
 
-    useEffect(() => { fetchUsers(); }, [fetchUsers]);
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     const toggleComments = async (userId: string, user: IUser) => {
         const newOpen = openUserId === userId ? null : userId;
         setOpenUserId(newOpen);
+
         if (newOpen && !comments[user._id]) {
             try {
                 const userComments = await commentService.getCommentsByUser(user.id.toString());
@@ -145,7 +167,9 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
             setUsers(prev => prev.map(u => u._id === user._id ? { ...u, ...updated } : u));
 
             handleInputChange(user._id, "");
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(err);
+        }
     }, [newComment]);
 
     const handleSortChange = (column: string, order: "asc" | "desc") => {
@@ -158,14 +182,28 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
     const handleExportExcel = () => {
         if (!users.length) return;
         const ws = XLSX.utils.json_to_sheet(users.map(u => ({
-            id: u.id, name: u.name, surname: u.surname, email: u.email, phone: u.phone,
-            age: u.age, course: u.course, course_format: u.course_format, course_type: u.course_type,
-            status: u.status, sum: u.sum, already_paid: u.already_paid, group: u.group,
-            created_at: u.created_at, manager: u.manager
+            id: u.id,
+            name: u.name,
+            surname: u.surname,
+            email: u.email,
+            phone: u.phone,
+            age: u.age,
+            course: u.course,
+            course_format: u.course_format,
+            course_type: u.course_type,
+            status: u.status,
+            sum: u.sum,
+            already_paid: u.already_paid,
+            group: u.group,
+            created_at: u.created_at,
+            manager: u.manager
         })));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Users');
-        const data = new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], { type: 'application/octet-stream' });
+        const data = new Blob(
+            [XLSX.write(wb, { bookType: 'xlsx', type: 'array' })],
+            { type: 'application/octet-stream' }
+        );
         saveAs(data, 'users.xlsx');
     };
 
@@ -211,7 +249,9 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
                             newComment={newComment}
                             handleInputChange={handleInputChange}
                             handleAddComment={handleAddComment}
-                            onUpdateUser={(updated) => setUsers(prev => prev.map(us => us._id === updated._id ? updated : us))}
+                            onUpdateUser={(updated) =>
+                                setUsers(prev => prev.map(us => us._id === updated._id ? updated : us))
+                            }
                         />
                     )}
                 </div>
@@ -221,9 +261,12 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
                 <UserUpdateComponent
                     user={selectedUser}
                     onClose={() => setSelectedUser(null)}
-                    onUpdateUser={(updated) => setUsers(prev => prev.map(u => u._id === updated._id ? updated : u))}
+                    onUpdateUser={(updated) =>
+                        setUsers(prev => prev.map(u => u._id === updated._id ? updated : u))
+                    }
                 />
             )}
         </div>
     );
 }
+
