@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
@@ -13,7 +14,7 @@ import CommentComponent from "@/app/components/comments/CommentsComponent";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
 import FilterComponent from "../filter/FilterComponent";
 import HeaderComponent from "@/app/components/header/HeaderComponent";
-import {getCurrentManagerEmail, getUserRole} from "@/app/helpers/role";
+import { getCurrentManagerEmail, getUserRole } from "@/app/helpers/role";
 
 import "./users-component.css";
 
@@ -45,11 +46,18 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
     const [sortColumn, setSortColumn] = useState<keyof IUser>("created_at");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-    const [page, setPage] = useState<number>(() => parseInt(searchParams.get("page") || "1", 10));
+    const [page, setPage] = useState<number>(1);
 
     const displayValue = (value: any) =>
         value === null || value === undefined || value === "" ? "null" : value;
 
+    // ⬇️ синхронізація page з URL
+    useEffect(() => {
+        const newPage = parseInt(searchParams.get("page") || "1", 10);
+        setPage(newPage);
+    }, [searchParams]);
+
+    // ⬇️ ініціалізація фільтрів і сортування з URL
     useEffect(() => {
         const newFilters = { ...defaultFilters };
         Object.keys(defaultFilters).forEach(key => {
@@ -65,13 +73,12 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
         if (direction) setSortOrder(direction);
     }, []);
 
-
     useEffect(() => {
         const handler = setTimeout(() => setDebouncedFilters(filters), 500);
         return () => clearTimeout(handler);
     }, [filters]);
 
-
+    // ⬇️ запис у URL
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -175,7 +182,6 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
         if (!text) return;
 
         try {
-            // const role = getUserRole();
             const role = getCurrentManagerEmail();
             if (!role) return;
 
