@@ -13,7 +13,7 @@ import CommentComponent from "@/app/components/comments/CommentsComponent";
 import UserUpdateComponent from "@/app/components/userUpdate/UserUpdateComponent";
 import FilterComponent from "../filter/FilterComponent";
 import HeaderComponent from "@/app/components/header/HeaderComponent";
-import { getUserRole } from "@/app/helpers/role";
+import {getCurrentManagerEmail, getUserRole} from "@/app/helpers/role";
 
 import "./users-component.css";
 
@@ -175,7 +175,8 @@ export default function UsersComponent({ setTotalUsers, usersPerPage }: UsersCom
         if (!text) return;
 
         try {
-            const role = getUserRole();
+            // const role = getUserRole();
+            const role = getCurrentManagerEmail();
             if (!role) return;
 
             const savedComment = await commentService.createComment({

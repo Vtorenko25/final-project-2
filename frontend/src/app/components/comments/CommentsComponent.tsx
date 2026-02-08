@@ -19,20 +19,21 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
     const [showEditModal, setShowEditModal] = useState(false);
 
     const currentManager = getCurrentManagerEmail();
-    const isAdmin = currentManager === "admin@gmail.com";
+    // const isAdmin = currentManager === "admin@gmail.com" || "admin";
 
 
     const canComment =
-        isAdmin ||
-        user.status === null ||
+        // isAdmin ||
+        user.status === "New" ||
         user.manager === null ||
         (user.status === "In Work" && user.manager === currentManager);
 
     const canEdit =
-        isAdmin ||
-        user.status === null ||
+        // isAdmin ||
+        user.status === null || "New" ||
         user.manager === null ||
         (user.status === "In Work" && user.manager === currentManager);
+
 
     const submitComment = async () => {
         const text = newComment[user._id];
@@ -117,3 +118,4 @@ const CommentComponent: FC<ICommentComponentProps & { onUpdateUser?: (updatedUse
 };
 
 export default CommentComponent;
+
