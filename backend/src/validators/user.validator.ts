@@ -5,8 +5,8 @@ import { OrderEnum } from "../enums/order.enum";
 import { UserListOrderEnum } from "../enums/user-list-order.enum";
 
 export class UserValidator {
-  private static name = joi.string().min(2).max(50).trim();
-  private static surname = joi.string().min(2).max(50).trim();
+  private static name = joi.string().min(1).max(50).trim();
+  private static surname = joi.string().min(1).max(50).trim();
   private static email = joi.string().regex(regexConstant.EMAIL).trim();
   private static phone = joi.string().regex(regexConstant.PHONE).trim();
   private static age = joi.number().min(18).max(200);
