@@ -4,12 +4,14 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuth } from '@/app/helpers/auth';
 
-export default function HomePage() {
+export default function PublicRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
 
     useEffect(() => {
-        router.replace(isAuth() ? '/orders' : '/login');
+        if (isAuth()) {
+            router.replace('/orders');
+        }
     }, []);
 
-    return null;
+    return <>{children}</>;
 }

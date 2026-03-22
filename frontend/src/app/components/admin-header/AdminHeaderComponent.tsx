@@ -20,7 +20,8 @@ export default function AdminHeaderComponent() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        // localStorage.removeItem('token');
+        localStorage.removeItem('tokens');
         router.push('/login');
     };
 

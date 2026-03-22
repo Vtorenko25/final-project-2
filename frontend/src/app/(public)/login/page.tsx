@@ -1,15 +1,17 @@
 'use client';
-import React from 'react';
-import LoginComponents from "@/app/components/login/LoginComponent";
-import "./login-page.css"
 
+import LoginComponents from "@/app/components/login/LoginComponent";
+
+import "./login-page.css";
+import PublicRoute from "@/app/components/publicRoute/PublicRoute";
 
 const LoginPage = () => {
-
     return (
-        <div className="login-page">
-            <LoginComponents/>
-        </div>
+        <PublicRoute>
+            <div className="login-page">
+                <LoginComponents/>
+            </div>
+        </PublicRoute>
     );
 };
 

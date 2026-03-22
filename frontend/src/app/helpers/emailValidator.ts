@@ -4,12 +4,12 @@ import {IEmailValidator} from "@/app/models/IEmailValidator";
 export const validateEmail = (email: string): IEmailValidator => {
     const errors: string[] = [];
     if (!email) {
-        errors.push("Email не може бути порожнім");
+        errors.push("Email cannot be empty");
     } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailRegex.test(email)) {
-            errors.push("Невірний формат email");
+            errors.push("Invalid email format");
         }
 
     }

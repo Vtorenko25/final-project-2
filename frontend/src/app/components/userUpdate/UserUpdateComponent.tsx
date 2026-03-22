@@ -1,4 +1,3 @@
-
 'use client';
 
 import { FC, useEffect, useState } from 'react';
@@ -6,6 +5,7 @@ import "./user-update-component.css";
 import { userService } from "@/app/services/user.service";
 import { courseFormatOptions, courseOptions, courseTypeOptions, statusOptions } from "@/app/constans/course.columns";
 import { IUserUpdateComponentProps } from "@/app/models/IUserUpdateComponentProps";
+import { getCurrentManagerEmail } from "@/app/helpers/role";
 
 const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onUpdateUser }) => {
     const [formData, setFormData] = useState({
@@ -28,6 +28,7 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
 
     const [loading, setLoading] = useState(false);
     const [groups, setGroups] = useState<string[]>([]);
+    const [ageError, setAgeError] = useState('');
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -41,6 +42,21 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
     }, []);
 
     const handleChange = (field: keyof typeof formData, value: string) => {
+        if (field === "age") {
+            if (value === "") {
+                setAgeError('');
+                setFormData(prev => ({ ...prev, age: "" }));
+                return;
+            }
+
+            const numericValue = Number(value);
+            if (numericValue < 10) {
+                setAgeError("Age must be at least 10");
+            } else {
+                setAgeError('');
+            }
+        }
+
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -67,12 +83,18 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
     };
 
     const handleSave = async () => {
+        if (formData.age && Number(formData.age) < 10) {
+            setAgeError("Age must be at least 10");
+            return;
+        }
+
         try {
             setLoading(true);
 
             const dto = {
                 ...formData,
-                manager: formData.status === "New" ? null : formData.manager,
+                status: "In Work",
+                manager: formData.manager || getCurrentManagerEmail(),
                 age: formData.age ? Number(formData.age) : undefined,
                 sum: formData.sum ? Number(formData.sum) : undefined,
                 already_paid: formData.already_paid ? Number(formData.already_paid) : undefined,
@@ -91,7 +113,6 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
             onClose();
         } catch (err: any) {
             console.error("Помилка при оновленні користувача:", err.response?.data || err.message || err);
-            alert("Не вдалося оновити користувача. Перевірте консоль.");
         } finally {
             setLoading(false);
         }
@@ -102,7 +123,7 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
             <div className="modal-content">
                 <div className="user-form-columns">
                     <div className="column">
-                        {["group","name","surname","email","phone","age"].map(field => (
+                        {["group","name","surname","email","phone"].map(field => (
                             <div className="form-group" key={field}>
                                 <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
                                 <input
@@ -117,6 +138,17 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
                                 )}
                             </div>
                         ))}
+
+                        <div className="form-group">
+                            <label>Age</label>
+                            <input
+                                type="number"
+                                min={10}
+                                value={formData.age}
+                                onChange={e => handleChange("age", e.target.value)}
+                            />
+                            {ageError && <p className="error">{ageError}</p>}
+                        </div>
                     </div>
 
                     <div className="column">
@@ -124,11 +156,9 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
                             <label>Status</label>
                             <select
                                 value={formData.status}
-                                onChange={e => handleChange("status", e.target.value)}
+                                disabled
                             >
-                                {statusOptions.map(opt => (
-                                    <option key={opt} value={opt}>{opt}</option>
-                                ))}
+                                <option value="In Work">In Work</option>
                             </select>
                         </div>
 
@@ -188,7 +218,7 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({ user, onClose, onU
 
                 <div className="modal-actions">
                     <button onClick={onClose} disabled={loading}>CLOSE</button>
-                    <button onClick={handleSave} disabled={loading}>
+                    <button onClick={handleSave} disabled={loading || !!ageError}>
                         {loading ? "Saving..." : "SUBMIT"}
                     </button>
                 </div>
