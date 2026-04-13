@@ -18,7 +18,7 @@ export const authService = {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message || "Невірні дані");
+                throw new Error(error.message || "Invalid data");
             }
 
             return await response.json();
@@ -43,7 +43,7 @@ export const authService = {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message || "Невірні дані");
+                throw new Error(error.message || "Invalid data");
             }
 
             return await response.json();
@@ -66,7 +66,7 @@ export const authService = {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message || "Помилка активації");
+                throw new Error(error.message || "Activation error");
             }
 
             return await response.json();

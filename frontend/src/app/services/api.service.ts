@@ -15,7 +15,7 @@ export const urlBuilder = {
     createGroup: () => `${base}/users/group`,
     assignGroup: () =>`${base}/users/group/assign`,
     createManager:()=>`${base}/managers/create`,
-    getAllManagers: (page:number) => `${base}/managers?page=${page}`,
+    getAllManagers: (page:number) => `${base}/managers?page=${page}&limit=3`,
     activateAccount: (id: number) => `${base}/managers/password/${id}`,
     banManager:(id:number) => `${base}/managers/ban/${id}`,
     unbanManager:(id:number) => `${base}/managers/unban/${id}`,
