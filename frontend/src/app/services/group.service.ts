@@ -2,59 +2,63 @@ import { urlBuilder } from "@/app/services/api.service";
 
 export const groupService = {
     getAllGroups: async () => {
-        try {
-            const tokensPair = localStorage.getItem("tokens");
-            if (!tokensPair) throw new Error("No tokens found in localStorage");
+        const tokens = localStorage.getItem("tokens");
+        if (!tokens) throw new Error("No tokens");
 
-            const { accessToken } = JSON.parse(tokensPair);
+        const { accessToken } = JSON.parse(tokens);
 
-            const response = await fetch(urlBuilder.getAllGroups(), {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
+        const res = await fetch(urlBuilder.getAllGroups(), {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                accept: "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to fetch groups");
-            }
+        if (!res.ok) throw new Error("Failed to fetch groups");
 
-            return await response.json();
-        } catch (error) {
-            console.error("Error fetching groups:", error);
-            throw error;
-        }
+        return res.json();
     },
 
     createGroup: async (name: string) => {
-        try {
-            const tokensPair = localStorage.getItem("tokens");
-            if (!tokensPair) throw new Error("No tokens found in localStorage");
+        const tokens = localStorage.getItem("tokens");
+        if (!tokens) throw new Error("No tokens");
+        const { accessToken } = JSON.parse(tokens);
 
-            const { accessToken } = JSON.parse(tokensPair);
+        const res = await fetch(urlBuilder.createGroup(), {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name }),
+        });
 
-            const response = await fetch(urlBuilder.createGroup(), {
-                method: "POST",
-                headers: {
-                    accept: "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify({ name }),
-            });
+        if (!res.ok) throw new Error("Failed to create group");
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to create group");
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error("Error creating group:", error);
-            throw error;
-        }
+        return res.json();
     },
 
+    assignGroupToUser: async (userId: string, name: string) => {
+        const tokens = localStorage.getItem("tokens");
+        if (!tokens) throw new Error("No tokens");
+        const { accessToken } = JSON.parse(tokens);
+
+        const res = await fetch(urlBuilder.assignGroup(), {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, name }),
+        });
+
+        // if (!res.ok) throw new Error("Failed to assign group");
+
+        if (!res.ok) {
+            const error = await res.json().catch(() => null);
+            console.error("Assign group error response:", error);
+            throw new Error(error?.message || "Failed to assign group");
+        }
+        return res.json();
+    }
 };

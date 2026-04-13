@@ -22,4 +22,6 @@ router.get("/groups", userController.getAllGroups);
 
 router.post("/group", userController.addGroupToUser);
 
+router.post("/group/assign", userController.assignGroupToUser);
+
 export const userRouter = router;

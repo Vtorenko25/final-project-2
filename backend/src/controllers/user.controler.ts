@@ -42,11 +42,7 @@ class UserController {
       res.status(200).json(result);
     } catch (e) {
       console.error("Помилка в updateUserById:", e);
-      next(
-        e instanceof ApiError
-          ? e
-          : new ApiError("User update error", 500),
-      );
+      next(e instanceof ApiError ? e : new ApiError("User update error", 500));
     }
   }
 
@@ -78,6 +74,22 @@ class UserController {
       const { userId, name } = req.body;
 
       const result = await userService.addGroupToUser(userId, name);
+
+      res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async assignGroupToUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { userId, name } = req.body;
+
+      const result = await userService.assignGroupToUser(userId, name);
 
       res.status(200).json(result);
     } catch (e) {

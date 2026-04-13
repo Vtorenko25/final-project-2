@@ -309,12 +309,30 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({
         }));
     };
 
+    // const handleAddGroup = async () => {
+    //     const name = formData.group.trim();
+    //     if (!name) return;
+    //
+    //     try {
+    //         await groupService.createGroup(name);
+    //
+    //         const updated = await groupService.getAllGroups();
+    //         const normalized = updated.map((g: any) =>
+    //             typeof g === "string" ? g : g.name
+    //         );
+    //
+    //         setGroups(normalized);
+    //     } catch (err) {
+    //         console.error("Error creating group:", err);
+    //     }
+    // };
+
     const handleAddGroup = async () => {
         const name = formData.group.trim();
         if (!name) return;
 
         try {
-            await groupService.createGroup(name);
+            await groupService.assignGroupToUser(user._id, name);
 
             const updated = await groupService.getAllGroups();
             const normalized = updated.map((g: any) =>
@@ -322,11 +340,11 @@ const UserUpdateComponent: FC<IUserUpdateComponentProps> = ({
             );
 
             setGroups(normalized);
+
         } catch (err) {
-            console.error("Error creating group:", err);
+            console.error("Error assigning group:", err);
         }
     };
-
     const handleSave = async () => {
         if (formData.age && Number(formData.age) < 10) {
             setAgeError("Age must be at least 10");

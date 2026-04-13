@@ -69,6 +69,23 @@ class UserService {
 
     return updatedUser;
   }
+
+  public async assignGroupToUser(userId: string, name: string): Promise<IUser> {
+    if (!name) throw new ApiError("Group name is required", 400);
+
+    const user = await userRepository.getById(userId);
+    if (!user) throw new ApiError("User not found", 404);
+
+    let group = await Group.findOne({ name });
+
+    if (!group) {
+      group = await Group.create({ name });
+    }
+
+    return await userRepository.updateById(userId, {
+      group: name,
+    });
+  }
 }
 
 export const userService = new UserService();
