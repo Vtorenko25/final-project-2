@@ -52,7 +52,6 @@ export const groupService = {
             body: JSON.stringify({ userId, name }),
         });
 
-        // if (!res.ok) throw new Error("Failed to assign group");
 
         if (!res.ok) {
             const error = await res.json().catch(() => null);

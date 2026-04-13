@@ -6,7 +6,7 @@ export const authService = {
     signIn: async (email: string, password: string): Promise<ITokens> => {
         const emailCheck = validateEmail(email);
         if (!emailCheck.valid) {
-            throw new Error(emailCheck.errors[0]); // першу помилку
+            throw new Error("Email or password is incorrect");
         }
 
         try {
@@ -17,8 +17,7 @@ export const authService = {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Invalid data");
+                throw new Error("Email or password is incorrect");
             }
 
             return await response.json();
@@ -31,7 +30,7 @@ export const authService = {
     signInManager: async (email: string, password: string): Promise<ITokens> => {
         const emailCheck = validateEmail(email);
         if (!emailCheck.valid) {
-            throw new Error(emailCheck.errors[0]);
+            throw new Error("Email or password is incorrect");
         }
 
         try {
@@ -42,8 +41,7 @@ export const authService = {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Invalid data");
+                throw new Error("Email or password is incorrect");
             }
 
             return await response.json();
@@ -65,8 +63,7 @@ export const authService = {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Activation error");
+                throw new Error("Email or password is incorrect");
             }
 
             return await response.json();
