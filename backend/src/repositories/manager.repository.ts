@@ -17,11 +17,15 @@ class ManagerRepository {
       filterObj.name = { $regex: query.search, $options: "i" };
     }
     const skip = query.limit * (query.page - 1);
+
     const [managers, total] = await Promise.all([
-      Managers.find(filterObj).limit(query.limit).skip(skip),
+      Managers.find(filterObj)
+        .sort({ manager_id: -1 })
+        .limit(query.limit)
+        .skip(skip),
+
       Managers.countDocuments(filterObj),
     ]);
-
     return [managers, total];
   }
 
