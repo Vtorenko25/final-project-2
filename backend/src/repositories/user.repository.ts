@@ -64,6 +64,11 @@ class UserRepository {
   public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
+
+  public async getAllGroups(): Promise<string[]> {
+    const groups = await User.distinct("group");
+    return groups.filter(Boolean);
+  }
 }
 
 export const userRepository = new UserRepository();

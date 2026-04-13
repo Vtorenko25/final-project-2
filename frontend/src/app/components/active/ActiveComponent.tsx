@@ -61,7 +61,8 @@ export default function ActiveComponent() {
 
         try {
             await authService.activateAccount(token, password, managerId);
-            router.push('/login');
+            localStorage.removeItem('tokens');
+            router.replace('/login');
         } catch (error: any) {
             console.log(error.message || 'Помилка активації');
         }
@@ -94,7 +95,7 @@ export default function ActiveComponent() {
                 onBlur={() => setTouched(true)}
             />
             {confirmPassword && password !== confirmPassword && touched && (
-                <p className="error">Паролі не співпадають</p>
+                <p className="error">Passwords do not match</p>
             )}
 
             <button

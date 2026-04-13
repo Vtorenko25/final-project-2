@@ -27,6 +27,10 @@ class UserService {
     if (!user) throw new ApiError("User not found", 404);
     return await userRepository.updateById(userId, dto);
   }
+
+  public async getAllGroups(): Promise<string[]> {
+    return await userRepository.getAllGroups();
+  }
 }
 
 export const userService = new UserService();

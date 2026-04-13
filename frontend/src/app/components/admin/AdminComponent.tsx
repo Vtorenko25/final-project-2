@@ -117,7 +117,6 @@ export default function AdminComponent() {
             fetchManagerStats(email);
         } catch (err) {
             console.error(err);
-            alert("Не вдалося створити посилання для активації.");
         }
     };
 
@@ -144,7 +143,6 @@ export default function AdminComponent() {
             fetchManagers(1);
         } catch (err) {
             console.error(err);
-            alert("Не вдалося заблокувати менеджера.");
         }
     };
 
@@ -154,7 +152,6 @@ export default function AdminComponent() {
             fetchManagers(1);
         } catch (err) {
             console.error(err);
-            alert("Не вдалося розблокувати менеджера.");
         }
     };
 

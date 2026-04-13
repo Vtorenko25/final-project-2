@@ -21,7 +21,7 @@ export const groupService = {
                 throw new Error(error.message || "Failed to fetch groups");
             }
 
-            return await response.json(); // масив груп
+            return await response.json();
         } catch (error) {
             console.error("Error fetching groups:", error);
             throw error;
@@ -50,7 +50,7 @@ export const groupService = {
                 throw new Error(error.message || "Failed to create group");
             }
 
-            return await response.json(); // нова група
+            return await response.json();
         } catch (error) {
             console.error("Error creating group:", error);
             throw error;

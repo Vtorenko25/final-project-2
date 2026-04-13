@@ -49,6 +49,15 @@ class UserController {
       );
     }
   }
+
+  public async getAllGroups(req: Request, res: Response, next: NextFunction) {
+    try {
+      const groups = await userService.getAllGroups();
+      res.json(groups);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const userController = new UserController();

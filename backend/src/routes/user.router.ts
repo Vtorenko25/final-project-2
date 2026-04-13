@@ -18,4 +18,6 @@ router.get("/statistic", userController.getAllUsersStatistic);
 
 router.put("/:id", userController.updateUserById);
 
+router.get("/groups", userController.getAllGroups);
+
 export const userRouter = router;
