@@ -5,6 +5,7 @@ import {
   IUserListQuery,
   IUserListResponse,
 } from "../interfaces/user.interface";
+import { Group } from "../models/group.model";
 import { userPresenter } from "../presenters/user.presenter";
 import { userRepository } from "../repositories/user.repository";
 
@@ -30,6 +31,43 @@ class UserService {
 
   public async getAllGroups(): Promise<string[]> {
     return await userRepository.getAllGroups();
+  }
+
+  public async createGroup(name: string): Promise<string> {
+    if (!name) {
+      throw new ApiError("Group name is required", 400);
+    }
+
+    const groups = await userRepository.getAllGroups();
+
+    const exists = groups.includes(name);
+
+    if (exists) {
+      throw new ApiError("Group already exists", 409);
+    }
+
+    return name;
+  }
+
+  public async addGroupToUser(userId: string, name: string): Promise<IUser> {
+    if (!name) {
+      throw new ApiError("Group name is required", 400);
+    }
+
+    const user = await userRepository.getById(userId);
+    if (!user) throw new ApiError("User not found", 404);
+
+    let group = await Group.findOne({ name });
+
+    if (!group) {
+      group = await Group.create({ name });
+    }
+
+    const updatedUser = await userRepository.updateById(userId, {
+      group: name,
+    });
+
+    return updatedUser;
   }
 }
 

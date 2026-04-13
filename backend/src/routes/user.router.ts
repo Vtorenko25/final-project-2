@@ -20,4 +20,6 @@ router.put("/:id", userController.updateUserById);
 
 router.get("/groups", userController.getAllGroups);
 
+router.post("/group", userController.addGroupToUser);
+
 export const userRouter = router;

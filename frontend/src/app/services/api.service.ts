@@ -12,7 +12,7 @@ export const urlBuilder = {
     getCommentsByUser: (crmId:string) => `${base}/comment/${crmId}`,
     updateUserById: (id: string) => `${base}/users/${id}`,
     getAllGroups: () => `${base}/users/groups`,
-    createGroup: () => `/groups`,
+    createGroup: () => `${base}/users/group`,
     createManager:()=>`${base}/managers/create`,
     getAllManagers: (page:number) => `${base}/managers?page=${page}`,
     activateAccount: (id: number) => `${base}/managers/password/${id}`,

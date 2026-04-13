@@ -45,7 +45,7 @@ class UserController {
       next(
         e instanceof ApiError
           ? e
-          : new ApiError("Помилка оновлення користувача", 500),
+          : new ApiError("User update error", 500),
       );
     }
   }
@@ -54,6 +54,32 @@ class UserController {
     try {
       const groups = await userService.getAllGroups();
       res.json(groups);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async createGroup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name } = req.body;
+
+      const result = await userService.createGroup(name);
+
+      res.status(201).json({
+        group: result,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async addGroupToUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId, name } = req.body;
+
+      const result = await userService.addGroupToUser(userId, name);
+
+      res.status(200).json(result);
     } catch (e) {
       next(e);
     }
