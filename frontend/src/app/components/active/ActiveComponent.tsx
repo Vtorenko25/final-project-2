@@ -70,12 +70,10 @@ export default function ActiveComponent() {
 
     return (
         <div className="active">
-            <h2>Активація акаунта</h2>
-
-            <label>Пароль</label>
+            <label>Password</label>
             <input
                 type="password"
-                placeholder="Введіть пароль"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onBlur={handleBlur}
@@ -86,10 +84,10 @@ export default function ActiveComponent() {
                 </ul>
             )}
 
-            <label>Підтвердіть пароль</label>
+            <label>Confirm Password</label>
             <input
                 type="password"
-                placeholder="Підтвердіть пароль"
+                placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 onBlur={() => setTouched(true)}

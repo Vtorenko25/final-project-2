@@ -20,7 +20,8 @@
 }
 
 .button-admin,
-.button-exit {
+.button-exit,
+.button-orders {
     background-color: #215521;
     border: none;
     border-radius: 4px;

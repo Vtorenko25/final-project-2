@@ -6,10 +6,15 @@ import { getUserRole } from '@/app/helpers/role';
 
 import { FaUserShield, FaSignOutAlt } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { FaList } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
+
+
 
 export default function AdminHeaderComponent() {
     const [role, setRole] = useState<'admin' | 'manager' | null>(null);
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         setRole(getUserRole());
@@ -20,10 +25,13 @@ export default function AdminHeaderComponent() {
     };
 
     const handleLogout = () => {
-        // localStorage.removeItem('token');
         localStorage.removeItem('tokens');
         router.push('/login');
     };
+
+    const toOrders = () => {
+        router.push('/orders');
+    }
 
     return (
         <div className="logo-component">
@@ -36,6 +44,14 @@ export default function AdminHeaderComponent() {
                         onClick={handleAdminClick}
                     >
                         <FaUserShield size={18} />
+                    </button>
+                )}
+                {pathname === '/admin' && (
+                    <button
+                        className="button-orders"
+                        onClick={toOrders}
+                    >
+                        <FaList size={18}/>
                     </button>
                 )}
                 <button
